@@ -31,8 +31,8 @@ public class CharacterController : MonoBehaviour {
         {
             animator.SetLayerWeight(1, 1);
         }
-        m_LocomotionId = Animator.StringToHash("Base layer.Locomotion");
-	}
+        m_LocomotionId = Animator.StringToHash("Base Layer.Locomotion");
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -54,12 +54,16 @@ public class CharacterController : MonoBehaviour {
     private void FixedUpdate()
     {
         stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+      
         if (IsInLocomotion() && (direction >= 0 && horizontal >= 0)|| (direction < 0 && horizontal < 0))
-          {
+          { 
+            
             Vector3 rotationAmount = Vector3.Lerp(Vector3.zero, new Vector3(0f, rotationDegreePerSecond * (horizontal < 0f ? -1f : 1f), 0f), Mathf.Abs(horizontal));
             Quaternion deltaRotation = Quaternion.Euler(rotationAmount * Time.deltaTime);
             this.transform.rotation = (this.transform.rotation * deltaRotation);
-          }
+            Debug.Log(rotationAmount);
+        }
+       
     }
 
     public void StickToWorldspace(Transform root, Transform camera, ref float directionOut, ref float speedOut)
