@@ -13,15 +13,39 @@ public class CharacterController : MonoBehaviour {
     float directionSpeed = 3f;
     [SerializeField]
     float rotationDegreePerSecond = 120;
+    [SerializeField]
+    private float speedDampTime = 0.05f;
 
     float speed = 0f;
     float direction = 0f;
-    float horizontal = 0f;
-    float vertical = 0f;
+    float charAngle = 0f;
+    float leftX = 0f;
+    float leftY = 0f;
     AnimatorStateInfo stateInfo;
+    AnimatorTransitionInfo transInfo;
 
-    int m_LocomotionId = 0;
+    private int m_LocomotionId = 0;
+    private int m_LocomotionPivotLId = 0;
+    private int m_LocomotionPivotRId = 0;
+    private int m_LocomotionPivotLTransId = 0;
+    private int m_LocomotionPivotRTransId = 0;
+    public Animator Animator
+    {
+        get
+        {
+            return this.animator;
+        }
+    }
 
+    public float Speed
+    {
+        get
+        {
+            return this.speed;
+        }
+    }
+
+    public float LocomotionThreshold { get { return 0.2f; } }
 
 
     // Use this for initialization
@@ -32,22 +56,43 @@ public class CharacterController : MonoBehaviour {
             animator.SetLayerWeight(1, 1);
         }
         m_LocomotionId = Animator.StringToHash("Base Layer.Locomotion");
+        m_LocomotionPivotLId = Animator.StringToHash("Base Layer.LocomotionPivotL");
+        m_LocomotionPivotRId = Animator.StringToHash("Base Layer.LocomotionPivotR");
+        m_LocomotionPivotLTransId = Animator.StringToHash("Base Layer.Locomotion -> Base Layer.LocomotionPivotL");
+        m_LocomotionPivotRTransId = Animator.StringToHash("Base Layer.Locomotion -> Base Layer.LocomotionPivotR");
     }
 	
 	// Update is called once per frame
 	void Update () {
-		if (animator)
+        if (animator && gameCam.CamState != ThirdPersonCamera.CamStates.FirstPerson)
         {
-            stateInfo = animator.GetCurrentAnimatorStateInfo(0); 
-            horizontal = Input.GetAxis("Horizontal");
-            vertical = Input.GetAxis("Vertical");
+            stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+            transInfo = animator.GetAnimatorTransitionInfo(0);
 
-            StickToWorldspace(this.transform, gameCam.transform, ref direction, ref speed);
+            leftX = Input.GetAxis("Horizontal");
+            leftY = Input.GetAxis("Vertical");
 
-            animator.SetFloat("Speed", speed);
+            charAngle = 0f;
+            direction = 0f;
+
+            StickToWorldspace(this.transform, gameCam.transform, ref direction, ref speed, ref charAngle,  IsInPivot());
+
+            animator.SetFloat("Speed", speed, speedDampTime, Time.deltaTime);
             animator.SetFloat("Direction", direction, directionDampTime, Time.deltaTime);
 
-          
+            if (speed > LocomotionThreshold)
+            {
+                if (!IsInPivot())
+                {
+                    Animator.SetFloat("Angle", charAngle);
+                }
+
+                if(speed < LocomotionThreshold && Mathf.Abs(leftX)<0.05f)
+                {
+                    animator.SetFloat("Direction", 0f);
+                    animator.SetFloat("Angle", 0f);
+                }
+            }
         }
 	}
     
@@ -55,10 +100,10 @@ public class CharacterController : MonoBehaviour {
     {
         stateInfo = animator.GetCurrentAnimatorStateInfo(0);
       
-        if (IsInLocomotion() && (direction >= 0 && horizontal >= 0)|| (direction < 0 && horizontal < 0))
+        if (IsInLocomotion() && (direction >= 0 && leftX >= 0)|| (direction < 0 && leftX < 0))
           { 
             
-            Vector3 rotationAmount = Vector3.Lerp(Vector3.zero, new Vector3(0f, rotationDegreePerSecond * (horizontal < 0f ? -1f : 1f), 0f), Mathf.Abs(horizontal));
+            Vector3 rotationAmount = Vector3.Lerp(Vector3.zero, new Vector3(0f, rotationDegreePerSecond * (leftX < 0f ? -1f : 1f), 0f), Mathf.Abs(leftX));
             Quaternion deltaRotation = Quaternion.Euler(rotationAmount * Time.deltaTime);
             this.transform.rotation = (this.transform.rotation * deltaRotation);
             Debug.Log(rotationAmount);
@@ -66,11 +111,11 @@ public class CharacterController : MonoBehaviour {
        
     }
 
-    public void StickToWorldspace(Transform root, Transform camera, ref float directionOut, ref float speedOut)
+    public void StickToWorldspace(Transform root, Transform camera, ref float directionOut, ref float speedOut, ref float angleOut, bool isPivoting)
     {
         Vector3 rootDirection = root.forward;
 
-        Vector3 stickDirection = new Vector3(horizontal, 0, vertical);
+        Vector3 stickDirection = new Vector3(leftX, 0, leftY);
 
         speedOut = stickDirection.sqrMagnitude;
 
@@ -87,6 +132,10 @@ public class CharacterController : MonoBehaviour {
         Debug.DrawRay(new Vector3(root.position.x, root.position.y + 2f, root.position.z), stickDirection, Color.blue);
 
         float angleRootToMove = Vector3.Angle(rootDirection, moveDirection) * (axisSign.y >= 0 ? -1f : 1f);
+        if(!isPivoting)
+        {
+            angleOut = angleRootToMove;
+        }
         angleRootToMove /= 180f;
         directionOut = angleRootToMove * directionSpeed;
     }
@@ -94,5 +143,13 @@ public class CharacterController : MonoBehaviour {
     public bool IsInLocomotion()
     {
         return stateInfo.nameHash == m_LocomotionId;
+    }
+
+    public bool IsInPivot()
+    {
+        return stateInfo.nameHash == m_LocomotionPivotLId ||
+            stateInfo.nameHash == m_LocomotionPivotRId ||
+            transInfo.nameHash == m_LocomotionPivotLTransId ||
+            transInfo.nameHash == m_LocomotionPivotRTransId;
     }
 }
