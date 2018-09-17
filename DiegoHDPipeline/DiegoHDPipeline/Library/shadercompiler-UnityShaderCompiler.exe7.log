@@ -1,0 +1,70 @@
+Base path: C:/Program Files/Unity/Hub/Editor/2018.2.3f1/Editor/Data
+Cmd: initializeCompiler
+Cmd: compileComputeKernel
+  api=4 insize=13247 outsize=15745 ok=1
+Cmd: compileComputeKernel
+  api=4 insize=13247 outsize=42369 ok=1
+Cmd: compileComputeKernel
+  api=4 insize=13247 outsize=29565 ok=1
+Cmd: compileComputeKernel
+  api=4 insize=13247 outsize=20077 ok=1
+Cmd: compileComputeKernel
+  api=4 insize=13247 outsize=18881 ok=1
+Cmd: compileComputeKernel
+  api=4 insize=13247 outsize=20157 ok=1
+Cmd: compileComputeKernel
+  api=4 insize=13247 outsize=26657 ok=1
+Cmd: compileComputeKernel
+  api=4 insize=13247 outsize=28949 ok=1
+Cmd: compileComputeKernel
+  api=4 insize=13247 outsize=25413 ok=1
+Cmd: compileComputeKernel
+  api=4 insize=13247 outsize=22089 ok=1
+Cmd: compileComputeKernel
+  api=4 insize=13247 outsize=21853 ok=1
+Cmd: compileComputeKernel
+  api=4 insize=13247 outsize=54405 ok=1
+Cmd: compileComputeKernel
+  api=4 insize=25381 outsize=16421 ok=1
+Cmd: compileComputeKernel
+  api=4 insize=2780 outsize=48145 ok=1
+Cmd: compileComputeKernel
+  api=4 insize=5004 outsize=5397 ok=1
+Cmd: compileComputeKernel
+  api=4 insize=9166 outsize=8909 ok=1
+Cmd: compileComputeKernel
+  api=4 insize=2868 outsize=897 ok=1
+Cmd: compileComputeKernel
+  api=4 insize=18144 outsize=14241 ok=1
+Cmd: compileComputeKernel
+  api=4 insize=32699 outsize=30237 ok=1
+Cmd: compileComputeKernel
+  api=4 insize=15985 outsize=14349 ok=1
+Cmd: compileComputeKernel
+  api=4 insize=16784 outsize=5113 ok=1
+Cmd: compileComputeKernel
+  api=4 insize=16784 outsize=5617 ok=1
+Cmd: compileComputeKernel
+  api=4 insize=16784 outsize=6501 ok=1
+Cmd: compileComputeKernel
+  api=4 insize=16784 outsize=9453 ok=1
+Cmd: compileComputeKernel
+  api=4 insize=16784 outsize=6565 ok=1
+Cmd: compileComputeKernel
+  api=4 insize=16784 outsize=8269 ok=1
+Cmd: compileComputeKernel
+  api=4 insize=16784 outsize=8773 ok=1
+Cmd: compileComputeKernel
+  api=4 insize=16784 outsize=11145 ok=1
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
