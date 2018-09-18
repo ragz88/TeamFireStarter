@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class CleanerEnemy2_0 : MonoBehaviour {
+public class CleanerEnemy2_0 : MonoBehaviour
+{
 
     public Transform[] moveTransforms;
     public float standardSpeed;
@@ -30,7 +31,8 @@ public class CleanerEnemy2_0 : MonoBehaviour {
     public Vector3 initHerbPos;
 
     // Use this for initialization
-    void Start () {
+    void Start()
+    {
         gyroscope.transform.parent = null;
         interactionController = gameObject.GetComponent<ObjectInteractions>();
         agent = gameObject.GetComponent<NavMeshAgent>();
@@ -51,10 +53,11 @@ public class CleanerEnemy2_0 : MonoBehaviour {
         {
             movePoints[i] = moveTransforms[i].position;
         }*/
-	}
-	
-	// Update is called once per frame
-	void Update () {
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
 
         currentDest = agent.destination;
 
@@ -104,7 +107,7 @@ public class CleanerEnemy2_0 : MonoBehaviour {
                             Invoke("resetSpeed", 0.5f);
                             agent.SetDestination(source.initialPos);
                             holdingSource = true;
-                            if (initHerbPos == new Vector3(0,25,0))
+                            if (initHerbPos == new Vector3(0, 25, 0))
                             {
                                 initHerbPos = transform.position;
                             }
@@ -121,11 +124,11 @@ public class CleanerEnemy2_0 : MonoBehaviour {
             //agent.SetDestination(movePoint);
             if (Mathf.Abs(agent.destination.x - initHerbPos.x) < 0.01f && Mathf.Abs(agent.destination.z - initHerbPos.z) < 0.01f)   //y value will differ
             {
-                
+
                 if (Vector3.Distance(transform.position, initHerbPos) < 1)
                 {
                     agent.SetDestination(moveTransforms[currentPos].position);
-                    initHerbPos = new Vector3(0,25,0);                           //this is a dummy number as null is not assignable to a V3
+                    initHerbPos = new Vector3(0, 25, 0);                           //this is a dummy number as null is not assignable to a V3
                 }
             }
             else
@@ -165,7 +168,7 @@ public class CleanerEnemy2_0 : MonoBehaviour {
                 //agent.SetDestination(movePoint);
             }
         }
-	}
+    }
 
     void resetSpeed()
     {

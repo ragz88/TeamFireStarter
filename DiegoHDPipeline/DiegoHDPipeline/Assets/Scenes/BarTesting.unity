@@ -876,7 +876,7 @@ MonoBehaviour:
   gyroscope: {fileID: 1593673705}
   holdingSource: 0
   bar: {fileID: 0}
-  initHerbPos: {x: 0, y: 25, z: 0}
+  initHerbPos: {x: 0, y: 0, z: 0}
 --- !u!195 &77851953
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -884,7 +884,7 @@ NavMeshAgent:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 77851950}
   m_Enabled: 1
-  m_AgentTypeID: -1372625422
+  m_AgentTypeID: 0
   m_Radius: 0.5
   m_Speed: 2.75
   m_Acceleration: 4
@@ -896,7 +896,7 @@ NavMeshAgent:
   m_AutoRepath: 1
   m_Height: 2
   m_BaseOffset: 1.49
-  m_WalkableMask: 4294967295
+  m_WalkableMask: 3
   m_ObstacleAvoidanceType: 4
 --- !u!4 &77851954
 Transform:
@@ -933,30 +933,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.51, y: 0.51, z: 0.83}
   m_Center: {x: 0, y: 0.43, z: 0.24}
---- !u!114 &86395705
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 86395703}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 05dc0d9a98f68ff43b8ae004af58e5f3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  pickupTags:
-  - EnergySource
-  prompt: {fileID: 155901868}
-  holdPos: {fileID: 1025701034}
-  pickUpSpeed: 0.1
-  nextToPickup: 0
-  nextToPushable: 0
-  holdingPickup: 0
-  pushingObject: 0
-  lerpingHeldBlock: 0
-  droppingPickup: 0
-  pickupObj: {fileID: 0}
-  pushObject: {fileID: 0}
 --- !u!114 &86395707
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1465,8 +1441,8 @@ MonoBehaviour:
   currentFillNum: 0
   filling: 0
   emptying: 0
-  fillSpeed: 10
-  emptySpeed: 15
+  fillSpeed: 20
+  emptySpeed: 20
   linkedBars: []
   initialSource: {fileID: 703666261}
 --- !u!114 &138654793
@@ -7749,12 +7725,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1f790bc9561c8b42953b23da5ba8a1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveTransforms:
-  - {fileID: 807700050}
+  moveTransforms: []
   isLooping: 0
   isActive: 0
-  returnOnInactive: 1
-  movementSpeed: 1
+  returnOnInactive: 0
+  movementSpeed: 0.1
   activatingBars:
   - {fileID: 1039439568}
 --- !u!65 &273986029
@@ -9871,12 +9846,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e847de3d40d18f446aa350bc9e44279e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bar: {fileID: 440465859}
+  bar: {fileID: 0}
   currentFillNum: 0
   filling: 0
   emptying: 0
   fillSpeed: 10
-  emptySpeed: 15
+  emptySpeed: 20
   linkedBars: []
   initialSource: {fileID: 0}
 --- !u!4 &441209777 stripped
@@ -10045,15 +10020,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e847de3d40d18f446aa350bc9e44279e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bar: {fileID: 453172892}
+  bar: {fileID: 0}
   currentFillNum: 0
   filling: 0
   emptying: 0
-  fillSpeed: 20
+  fillSpeed: 10
   emptySpeed: 20
-  linkedBars:
-  - {fileID: 1039439568}
-  initialSource: {fileID: 703666261}
+  linkedBars: []
+  initialSource: {fileID: 0}
 --- !u!114 &453172892
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14284,13 +14258,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3df27b9289d1e8c4fb82e0df4f4673ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_AgentTypeID: -1372625422
+  m_AgentTypeID: 0
   m_CollectObjects: 0
   m_Size: {x: 10, y: 10, z: 10}
   m_Center: {x: 0, y: 2, z: 0}
   m_LayerMask:
     serializedVersion: 2
-    m_Bits: 823
+    m_Bits: 4294967295
   m_UseGeometry: 0
   m_DefaultArea: 0
   m_IgnoreNavMeshAgent: 1
@@ -14298,9 +14272,9 @@ MonoBehaviour:
   m_OverrideTileSize: 0
   m_TileSize: 256
   m_OverrideVoxelSize: 0
-  m_VoxelSize: 0.23333333
+  m_VoxelSize: 0.16666667
   m_BuildHeightMesh: 0
-  m_NavMeshData: {fileID: 23800000, guid: 0a160c4c653caee40aa7a6a4e01df65d, type: 2}
+  m_NavMeshData: {fileID: 23800000, guid: f3f01efe326afca4d8e96b1903864e45, type: 2}
 --- !u!4 &843465248
 Transform:
   m_ObjectHideFlags: 0
@@ -15912,8 +15886,8 @@ MonoBehaviour:
   currentFillNum: 0
   filling: 0
   emptying: 0
-  fillSpeed: 15
-  emptySpeed: 15
+  fillSpeed: 20
+  emptySpeed: 20
   linkedBars:
   - {fileID: 138654792}
   initialSource: {fileID: 703666261}
@@ -22810,7 +22784,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1386698190}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 3.284, y: 0.858, z: -1.164}
+  m_LocalPosition: {x: 3.284, y: 0.85, z: -1.164}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -23546,18 +23520,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff7ce9d6875473d4090b73d2c9b9cd56, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveTransforms:
-  - {fileID: 97765674}
-  - {fileID: 1752674196}
-  - {fileID: 1578892143}
-  - {fileID: 1698824004}
-  - {fileID: 626594327}
-  - {fileID: 682876220}
+  moveTransforms: []
   standardSpeed: 0
   cleaningSpeed: 0
   rayMask:
     serializedVersion: 2
-    m_Bits: 2560
+    m_Bits: 0
   holdingSource: 0
   bar: {fileID: 0}
 --- !u!114 &1476697782
@@ -23571,8 +23539,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d5307a7a1b82a3478d2bbca4d36fd05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prompt: {fileID: 24662882}
-  liftPos: {fileID: 1259192925}
+  prompt: {fileID: 0}
+  liftPos: {fileID: 0}
   pushPos: {fileID: 0}
   liftSpeed: 0.1
   holdingPickup: 0
@@ -24030,7 +23998,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1528810799}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e847de3d40d18f446aa350bc9e44279e, type: 3}
   m_Name: 
@@ -24039,11 +24007,10 @@ MonoBehaviour:
   currentFillNum: 0
   filling: 0
   emptying: 0
-  fillSpeed: 20
+  fillSpeed: 10
   emptySpeed: 20
-  linkedBars:
-  - {fileID: 1039439568}
-  initialSource: {fileID: 703666261}
+  linkedBars: []
+  initialSource: {fileID: 1528810800}
 --- !u!114 &1528810803
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -29727,7 +29694,7 @@ MonoBehaviour:
   LerpBlock1: {fileID: 1405501909}
   LerpBlock2: {fileID: 1601360740}
   WingSpeed: 0.15
-  FillSpeed: 1
+  FillSpeed: 0.1
   DoorSpeed: 0.4
   DiscSpeed: 0.6
   BlockSpeed: 0.1
@@ -30457,7 +30424,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1810094450}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -6.636, y: 0.58, z: 4.931}
+  m_LocalPosition: {x: -6.636, y: 0.64, z: 4.931}
   m_LocalScale: {x: 3.3791325, y: 0.53684115, z: 3.0416555}
   m_Children:
   - {fileID: 499437564}
@@ -30476,11 +30443,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1f790bc9561c8b42953b23da5ba8a1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveTransforms:
-  - {fileID: 499437564}
+  moveTransforms: []
   isLooping: 0
   isActive: 0
-  returnOnInactive: 1
+  returnOnInactive: 0
   movementSpeed: 3
   activatingBars:
   - {fileID: 1039439568}
@@ -31266,12 +31232,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1f790bc9561c8b42953b23da5ba8a1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveTransforms:
-  - {fileID: 179696389}
+  moveTransforms: []
   isLooping: 0
   isActive: 0
   returnOnInactive: 0
-  movementSpeed: 1
+  movementSpeed: 0.1
   activatingBars:
   - {fileID: 1039439568}
 --- !u!65 &1924812119
@@ -31574,15 +31539,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e847de3d40d18f446aa350bc9e44279e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bar: {fileID: 1943910079}
+  bar: {fileID: 0}
   currentFillNum: 0
   filling: 0
   emptying: 0
-  fillSpeed: 20
+  fillSpeed: 10
   emptySpeed: 20
-  linkedBars:
-  - {fileID: 1039439568}
-  initialSource: {fileID: 703666261}
+  linkedBars: []
+  initialSource: {fileID: 0}
 --- !u!114 &1943910079
 MonoBehaviour:
   m_ObjectHideFlags: 0
