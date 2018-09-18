@@ -59,7 +59,7 @@ public class DoorOpen : MonoBehaviour {
             Block.position = Vector3.Lerp(Block.position, LerpBlock1.position, BlockSpeed);
             //Block.eulerAngles = Vector3.Lerp(Block.eulerAngles, new Vector3(0,0,0), 0.01f);
             Block.rotation = Quaternion.Slerp(Block.rotation, Quaternion.identity, 0.05f);
-            if (Vector3.Distance(Block.position, LerpBlock1.position) < 0.05f/* && Block.rotation == Quaternion.identity*/)
+            if (Vector3.Distance(Block.position, LerpBlock1.position) < 0.05f && Quaternion.Angle(Block.rotation,Quaternion.identity) < 1.5f)
             {
                 Block.parent = Disc;
                 Activated = true;

@@ -87,6 +87,10 @@ public class CleanerEnemy2_0 : MonoBehaviour
                     {
                         isTurning = true;
                         currentPos = (currentPos + turnDirectionInt) % 4;
+                        if (currentPos == -1)
+                        {
+                            currentPos = moveTransforms.Length - 1;
+                        }
                         agent.SetDestination(moveTransforms[currentPos].position);
                         //initDir = transform.rotation;
                         agent.speed = 0.1f;
