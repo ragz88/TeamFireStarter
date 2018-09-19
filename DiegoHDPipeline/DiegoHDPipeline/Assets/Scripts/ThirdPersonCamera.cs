@@ -29,7 +29,7 @@ struct CameraPosition
     public class ThirdPersonCamera : MonoBehaviour
 {
     [SerializeField]
-    private Transform parentRig;
+    Transform parentRig;
     [SerializeField]
     float distanceAway;
     [SerializeField]
@@ -81,6 +81,17 @@ struct CameraPosition
     float distanceUpFree;
     Vector2 rightStickPrevFrame = Vector2.zero;
     Vector3 characterOffset;
+
+
+    public Transform ParentRig
+     {
+        get
+        {
+            return this.parentRig;
+        }
+     }
+
+
 
     public CamStates CamState
     {

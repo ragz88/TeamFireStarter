@@ -20,7 +20,7 @@ RenderSettings:
   m_FogDensity: 0.01
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
-  m_AmbientSkyColor: {r: 0.212, g: 0.227, b: 0.259, a: 1}
+  m_AmbientSkyColor: {r: 0.1, g: 0.1, b: 0.1, a: 1}
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
   m_AmbientIntensity: 0
@@ -7731,6 +7731,24 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 226612019}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &233655030 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1924912051179184, guid: 305b402ec8daf674dac202e4fda773f1,
+    type: 2}
+  m_PrefabInternal: {fileID: 623701779}
+--- !u!114 &233655032
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 233655030}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ec207ea64b4d7941b1606a60041dd46, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  smoothingFactor: 0.1
+  target: {fileID: 0}
 --- !u!1 &236907483
 GameObject:
   m_ObjectHideFlags: 0
@@ -12937,7 +12955,17 @@ Prefab:
       objectReference: {fileID: 1173017964}
     - target: {fileID: 1306933003329254, guid: 305b402ec8daf674dac202e4fda773f1, type: 2}
       propertyPath: m_Name
-      value: Dancing
+      value: Diego
+      objectReference: {fileID: 0}
+    - target: {fileID: 114986267074230994, guid: 305b402ec8daf674dac202e4fda773f1,
+        type: 2}
+      propertyPath: jumpMultiplier
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114986267074230994, guid: 305b402ec8daf674dac202e4fda773f1,
+        type: 2}
+      propertyPath: jumpDist
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 305b402ec8daf674dac202e4fda773f1, type: 2}
@@ -31905,6 +31933,21 @@ Prefab:
       propertyPath: followXform
       value: 
       objectReference: {fileID: 1314874417}
+    - target: {fileID: 114759372356366144, guid: 99060b51c792e2448b3c6e7aed65f44d,
+        type: 2}
+      propertyPath: smooth
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 114759372356366144, guid: 99060b51c792e2448b3c6e7aed65f44d,
+        type: 2}
+      propertyPath: camSmoothDampTime
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114759372356366144, guid: 99060b51c792e2448b3c6e7aed65f44d,
+        type: 2}
+      propertyPath: lookDirDampTime
+      value: 0.1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 99060b51c792e2448b3c6e7aed65f44d, type: 2}
   m_IsPrefabAsset: 0
