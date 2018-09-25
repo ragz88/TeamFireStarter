@@ -1,40 +1,55 @@
 Base path: C:/Program Files/Unity/Hub/Editor/2018.2.3f1/Editor/Data
 Cmd: initializeCompiler
 Cmd: compileComputeKernel
-  api=4 insize=13247 outsize=89437 ok=1
+  api=4 insize=13247 outsize=72365 ok=1
+Cmd: compileComputeKernel
+  api=4 insize=13247 outsize=18881 ok=1
+Cmd: compileComputeKernel
+  api=4 insize=13247 outsize=20157 ok=1
+Cmd: compileComputeKernel
+  api=4 insize=13247 outsize=29649 ok=1
+Cmd: compileComputeKernel
+  api=4 insize=13247 outsize=20641 ok=1
+Cmd: compileComputeKernel
+  api=4 insize=13247 outsize=28949 ok=1
 Cmd: compileComputeKernel
   api=4 insize=13247 outsize=20345 ok=1
 Cmd: compileComputeKernel
   api=4 insize=13247 outsize=31245 ok=1
 Cmd: compileComputeKernel
-  api=4 insize=13247 outsize=29849 ok=1
+  api=4 insize=13247 outsize=37025 ok=1
 Cmd: compileComputeKernel
-  api=4 insize=13247 outsize=46581 ok=1
+  api=4 insize=13247 outsize=31321 ok=1
 Cmd: compileComputeKernel
-  api=4 insize=25381 outsize=14653 ok=1
+  api=4 insize=25381 outsize=15909 ok=1
 Cmd: compileComputeKernel
-  api=4 insize=2059 outsize=349 ok=1
+  api=4 insize=6933 outsize=15417 ok=1
 Cmd: compileComputeKernel
-  api=4 insize=7330 outsize=9833 ok=1
+  api=4 insize=9166 outsize=8529 ok=1
 Cmd: compileComputeKernel
-  api=4 insize=32699 outsize=30237 ok=1
+  api=4 insize=2868 outsize=897 ok=1
 Cmd: compileComputeKernel
-  api=4 insize=16784 outsize=4729 ok=1
+  api=4 insize=19653 outsize=94469 ok=1
 Cmd: compileComputeKernel
-  api=4 insize=16784 outsize=5233 ok=1
+  api=4 insize=32699 outsize=32649 ok=1
 Cmd: compileComputeKernel
-  api=4 insize=16784 outsize=7009 ok=1
+  api=4 insize=15985 outsize=6213 ok=1
 Cmd: compileComputeKernel
-  api=4 insize=16784 outsize=9453 ok=1
+  api=4 insize=16784 outsize=6505 ok=1
 Cmd: compileComputeKernel
-  api=4 insize=16784 outsize=6565 ok=1
+  api=4 insize=16784 outsize=7321 ok=1
+Cmd: compileComputeKernel
+  api=4 insize=16784 outsize=6805 ok=1
+Cmd: compileComputeKernel
+  api=4 insize=16784 outsize=8773 ok=1
 Cmd: compileComputeKernel
   api=4 insize=16784 outsize=7957 ok=1
 Cmd: compileComputeKernel
-  api=4 insize=16784 outsize=8077 ok=1
+  api=4 insize=16784 outsize=8461 ok=1
 Cmd: compileComputeKernel
-  api=4 insize=16784 outsize=9941 ok=1
+  api=4 insize=16784 outsize=10469 ok=1
 Cmd: compileComputeKernel
-  api=4 insize=16784 outsize=10773 ok=1
+  api=4 insize=16784 outsize=11449 ok=1
 Cmd: compileComputeKernel
   api=4 insize=2845 outsize=4121 ok=1
+Cmd: initializeCompiler
