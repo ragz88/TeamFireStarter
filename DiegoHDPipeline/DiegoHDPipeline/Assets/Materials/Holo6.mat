@@ -6,8 +6,8 @@ Material:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: FredBall 1
-  m_Shader: {fileID: 4800000, guid: 44ec7e79478aaef49aace70aff619a1b, type: 3}
+  m_Name: Holo6
+  m_Shader: {fileID: 4800000, guid: 7e7034d155be4e946a945044f23779b6, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -18,8 +18,8 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
-    - Texture2D_D00DAF72:
-        m_Texture: {fileID: 2800000, guid: 2c29c08dd1c0b6749b7cd0fcff7a29fd, type: 3}
+    - Texture2D_625C3361:
+        m_Texture: {fileID: 2800000, guid: ed8880364a4b0324a924b1acb63e52a7, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BumpMap:
@@ -63,9 +63,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - Vector1_9047B589: 4.19
-    - Vector1_B93E6788: 6.61
-    - Vector1_E6FF1976: 3.01
+    - Vector1_3B22C21C: 1.03
     - _AlphaClip: 0
     - _Blend: 0
     - _BumpScale: 1
@@ -87,8 +85,11 @@ Material:
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
-    - Color_2094D828: {r: 85.445015, g: 32.310738, b: 0, a: 0}
-    - Color_4F5F71D5: {r: 0.5764706, g: 0.55473614, b: 0, a: 0}
+    - Color_85943B4E: {r: 0, g: 12.844473, b: 12.104739, a: 0}
+    - Color_A3D6AD3E: {r: 0, g: 1, b: 0.9907737, a: 0}
+    - Color_BD39205D: {r: 0, g: 3.6928086, b: 3.776172, a: 0}
+    - Vector2_193BBDA9: {r: 0, g: 0.5, b: 0, a: 0}
+    - Vector2_76A94196: {r: 1, g: 30, b: 1, a: 0}
     - _Color: {r: 0.5, g: 0.5, b: 0.5, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
