@@ -46,10 +46,14 @@ public class Seeker : MonoBehaviour {
     float eyeRot = 0;
 
     float stdSpeed;
+    float stdAngularSpeed;
+    float chaseAngularSpeed;
     float chaseSpeed;
     float turnSpeed;
     public float chaseSpeedMultiplier;
+    public float angularSpeedMultiplier = 2f;
     public float turnSpeedMultiplier;
+    public float loseSightTime = 1;
 
     public float DestroyDelay = 1f;
 
@@ -68,6 +72,8 @@ public class Seeker : MonoBehaviour {
         stdSpeed = agent.speed;
         chaseSpeed = agent.speed * chaseSpeedMultiplier;
         turnSpeed = agent.speed * turnSpeedMultiplier;
+        stdAngularSpeed = agent.angularSpeed;
+        chaseAngularSpeed = stdAngularSpeed * angularSpeedMultiplier;
 
         PassiveEyeColours = new Color[eyeLights.Length];
 
@@ -99,15 +105,23 @@ public class Seeker : MonoBehaviour {
             agent.SetDestination(patrolPoints[currentPatrolPoint].position);
 
             eyeRot = eyeRot + eyeSwaySpeed;
-            if (eyeRot > maxEyeSwayAngle || eyeRot < -maxEyeSwayAngle)
+            if (eyeRot > maxEyeSwayAngle)
             {
-                eyeSwaySpeed = eyeSwaySpeed * -1; //use sine graph
+                eyeSwaySpeed = -1 * Mathf.Abs(eyeSwaySpeed); //use sine graph
+            }
+            else if (eyeRot < -maxEyeSwayAngle)
+            {
+                eyeSwaySpeed = Mathf.Abs(eyeSwaySpeed); //use sine graph
             }
             Eye.localEulerAngles = new Vector3(0, eyeRot, 0);
 
         }
         else if (seekState == seekerState.Chasing)
         {
+            Eye.LookAt(energyCubeTarget.transform);
+            //eyeRot = Eye.eulerAngles.y;
+            //Eye.localEulerAngles = new Vector3(0, eyeRot, 0);
+
             if (eyeState == EyeState.Passive)
             {
                 eyeState = EyeState.LockedOn;
@@ -118,9 +132,12 @@ public class Seeker : MonoBehaviour {
                 rend.material = lockedOnEyeMat;
             }
 
+            agent.speed = chaseSpeed;
+            agent.angularSpeed = chaseAngularSpeed;
+
             if (Vector3.Distance(energyCubeTarget.transform.position, transform.position) < 15f)   //Change to hide out of sight
             {
-                if (Vector3.Distance(energyCubeTarget.transform.position, transform.position) < 2.5f)
+                if (Vector3.Distance(energyCubeTarget.transform.position, transform.position) < 2.85f)
                 {
                     seekState = seekerState.Destroying;
                     agent.SetDestination(transform.position);
@@ -132,7 +149,7 @@ public class Seeker : MonoBehaviour {
             }
             else
             {
-                seekState = seekerState.Returning;
+                seekState = seekerState.Destroying;
             }
 
         }
@@ -140,16 +157,23 @@ public class Seeker : MonoBehaviour {
         {
             if (!destroyingObject)
             {
+                DestroyDelay = energyCubeTarget.dissolveTime / 2;
                 Invoke("stopDestroying", DestroyDelay);
-                energyCubeTarget.Interactions.dropObject();
+                if (energyCubeTarget.Interactions != null)
+                {
+                    energyCubeTarget.Interactions.dropObject();
+                }
                 myObjectHandler.objectToLift = energyCubeTarget.gameObject;
                 myObjectHandler.LiftObject();
+                destroyingObject = true;
+                energyCubeTarget.Dissolve();
             }
-
 
         }
         else if (seekState == seekerState.Returning)
         {
+            agent.speed = stdSpeed;
+            agent.angularSpeed = stdAngularSpeed;
             //Here we go back on patrol
             if (eyeState == EyeState.LockedOn)
             {
@@ -180,6 +204,7 @@ public class Seeker : MonoBehaviour {
     void stopDestroying()
     {
         seekState = seekerState.Returning;
+        myObjectHandler.dropObject();
         destroyingObject = false;
     }
 
