@@ -25027,6 +25027,16 @@ Prefab:
       propertyPath: parentRig
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 114945369846195110, guid: 2ec8b6e70b39b9e4c9d863f93ece33b7,
+        type: 2}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114527615685710600, guid: 2ec8b6e70b39b9e4c9d863f93ece33b7,
+        type: 2}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2ec8b6e70b39b9e4c9d863f93ece33b7, type: 2}
   m_IsPrefabAsset: 0
