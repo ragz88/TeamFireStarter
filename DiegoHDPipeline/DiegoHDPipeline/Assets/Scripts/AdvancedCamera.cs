@@ -25,8 +25,8 @@ struct CameraPosition
 }
 
 
-    //[RequireComponent(typeof(BarsEffect))]
-    public class ThirdPersonCamera : MonoBehaviour
+//[RequireComponent(typeof(BarsEffect))]
+public class AdvancedCamera : MonoBehaviour
 {
     [SerializeField]
     Transform parentRig;
@@ -49,7 +49,7 @@ struct CameraPosition
     [SerializeField]
     float firstPersonThreshold = 0.5f;
     [SerializeField]
-    CharacterController follow;
+    GameObject follow;
     [SerializeField]
     float firstPersonLookSpeed = 1.5f;
     [SerializeField]
@@ -84,12 +84,12 @@ struct CameraPosition
 
 
     public Transform ParentRig
-     {
+    {
         get
         {
             return this.parentRig;
         }
-     }
+    }
 
 
 
@@ -102,12 +102,12 @@ struct CameraPosition
     }
 
     public enum CamStates
-     {
+    {
         Behind,
         FirstPerson,
         Target,
         Free
-     }
+    }
 
     public Vector3 rigToGoalDirection
     {
@@ -124,11 +124,11 @@ struct CameraPosition
 
 
     Vector3 velocityCanSmooth = Vector3.zero;
-      [SerializeField]
-      float camSmoothDampTime = .1f;
-      private Vector3 velocityLookDir = Vector3.zero;
-      [SerializeField]
-      private float lookDirDampTime = 0.1f;
+    [SerializeField]
+    float camSmoothDampTime = .1f;
+    private Vector3 velocityLookDir = Vector3.zero;
+    [SerializeField]
+    private float lookDirDampTime = 0.1f;
 
     // Use this for initialization
     void Start()
@@ -139,7 +139,7 @@ struct CameraPosition
             Debug.LogError("Parent camera to empty GameObject.", this);
         }
 
-        follow = GameObject.FindWithTag("PlayerBody").GetComponent<CharacterController>();
+        //follow = GameObject.FindWithTag("PlayerBody").GetComponent<CharacterController>();
         followXform = GameObject.FindWithTag("Player").transform;
         lookDir = followXform.forward;
         curLookDir = followXform.forward;
@@ -163,7 +163,8 @@ struct CameraPosition
     }
 
     // Update is called once per frame
-    void Update() {
+    void Update()
+    {
 
     }
 
@@ -180,52 +181,52 @@ struct CameraPosition
         if (Input.GetAxis("Target") > TARGET_THRESHOLD)
         {
             //barEffect.coverage = Mathf.SmoothStep(barEffect.coverage, widescreen, targetingTime);
-           
+
             camState = CamStates.Target;
         }
         else
         {
             //barEffect.coverage = Mathf.SmoothStep(barEffect.coverage, 0f, targetingTime);
 
-            if (rightY > firstPersonThreshold && camState != CamStates.Free && !follow.IsInLocomotion())
+            if (Input.GetKey("i")/*rightY > firstPersonThreshold && camState != CamStates.Free && !follow.IsInLocomotion()*/)
             {
                 xAxisRot = 0;
                 lookWeight = 0f;
                 camState = CamStates.FirstPerson;
             }
 
-            if ((rightY < freeThreshold ) /*&& System.Math.Round(follow.Speed, 2) == 0*/)
+            if ((rightY < freeThreshold) /*&& System.Math.Round(follow.Speed, 2) == 0*/)
             {
                 camState = CamStates.Free;
                 savedRigToGoal = Vector3.zero;
             }
 
-            if ((camState == CamStates.FirstPerson &&Input.GetButton("ExitFPV")) ||
+            if ((camState == CamStates.FirstPerson && Input.GetButton("ExitFPV")) ||
             (camState == CamStates.Target && (Input.GetAxis("Target") <= TARGET_THRESHOLD)))
             {
                 camState = CamStates.Behind;
             }
         }
 
-        follow.Animator.SetLookAtWeight(lookWeight);
+        //follow.Animator.SetLookAtWeight(lookWeight);
 
-        switch(camState)
+        switch (camState)
         {
             case CamStates.Behind:
                 ResetCamera();
 
-               
-                if (follow.Speed > follow.LocomotionThreshold && follow.IsInLocomotion() && !follow.IsInPivot())
+
+                if (Input.GetKey("r")/*follow.Speed > follow.LocomotionThreshold && follow.IsInLocomotion() && !follow.IsInPivot()*/)
                 {
                     lookDir = Vector3.Lerp(followXform.right * (leftX < 0 ? 1f : -1f), followXform.forward * (leftY < 0 ? -1f : 1f), Mathf.Abs(Vector3.Dot(this.transform.forward, followXform.forward)));
                     Debug.DrawRay(this.transform.position, lookDir, Color.white);
 
-                    
+
                     curLookDir = Vector3.Normalize(characterOffset - this.transform.position);
                     curLookDir.y = 0;
                     Debug.DrawRay(this.transform.position, curLookDir, Color.green);
 
-                   
+
                     curLookDir = Vector3.SmoothDamp(curLookDir, lookDir, ref velocityLookDir, lookDirDampTime);
                 }
 
@@ -251,12 +252,12 @@ struct CameraPosition
                 Quaternion rotationShift = Quaternion.FromToRotation(this.transform.forward, firstPersonCamPos.Xform.forward);
                 this.transform.rotation = rotationShift * this.transform.rotation;
 
-                follow.Animator.SetLookAtPosition(firstPersonCamPos.Xform.position + firstPersonCamPos.Xform.forward);
-                lookWeight = Mathf.Lerp(lookWeight, 1.0f, Time.deltaTime * firstPersonLookSpeed);    
+                //follow.GetComponent<Animator>().SetLookAtPosition(firstPersonCamPos.Xform.position + firstPersonCamPos.Xform.forward);
+                lookWeight = Mathf.Lerp(lookWeight, 1.0f, Time.deltaTime * firstPersonLookSpeed);
 
-                Vector3 rotationAmount = Vector3.Lerp(Vector3.zero,new Vector3(0f, fPSRotationDegreePerSecond * (leftX < 0f ? -1f : 1f),0f),Mathf.Abs(leftX));
+                Vector3 rotationAmount = Vector3.Lerp(Vector3.zero, new Vector3(0f, fPSRotationDegreePerSecond * (leftX < 0f ? -1f : 1f), 0f), Mathf.Abs(leftX));
                 Quaternion deltaRotation = Quaternion.Euler(rotationAmount * Time.deltaTime);
-                follow.transform.rotation = (follow.transform.rotation * deltaRotation);
+                //follow.transform.rotation = (follow.transform.rotation * deltaRotation);
 
                 targetPosition = firstPersonCamPos.Xform.position;
                 lookAt = Vector3.Lerp(targetPosition + followXform.forward, this.transform.position + this.transform.forward, camSmoothDampTime * Time.deltaTime);
@@ -347,7 +348,7 @@ struct CameraPosition
 
 
                 // Rotating around character
-                parentRig.RotateAround(characterOffset, followXform.up, (freeRotationDegreePerSecond * (Mathf.Abs(rightX) > rightStickThreshold ? rightX : 0f))*-1);
+                parentRig.RotateAround(characterOffset, followXform.up, (freeRotationDegreePerSecond * (Mathf.Abs(rightX) > rightStickThreshold ? rightX : 0f)) * -1);
 
                 // Still need to track camera behind player even if they aren't using the right stick; achieve this by saving distanceAwayFree every frame
                 if (targetPosition == Vector3.zero)
@@ -367,23 +368,23 @@ struct CameraPosition
             transform.LookAt(lookAt);
         }
         rightStickPrevFrame = new Vector2(rightX, rightY);
-        
+
     }
 
-    void smoothPosition (Vector3 fromPos, Vector3 toPos)
+    void smoothPosition(Vector3 fromPos, Vector3 toPos)
     {
         this.transform.position = Vector3.SmoothDamp(fromPos, toPos, ref velocityCanSmooth, camSmoothDampTime);
     }
 
-    void CompensateForWalls (Vector3 fromObject, ref Vector3 toTarget)
+    void CompensateForWalls(Vector3 fromObject, ref Vector3 toTarget)
     {
         Debug.DrawLine(fromObject, toTarget, Color.cyan);
         RaycastHit wallHit = new RaycastHit();
-        if(Physics.Linecast(fromObject,toTarget, out wallHit))
+        if (Physics.Linecast(fromObject, toTarget, out wallHit))
         {
             Debug.DrawRay(wallHit.point, Vector3.left, Color.red);
             toTarget = new Vector3(wallHit.point.x, toTarget.y, wallHit.point.z);
-              
+
         }
     }
 
@@ -393,4 +394,4 @@ struct CameraPosition
         transform.localRotation = Quaternion.Lerp(transform.localRotation, Quaternion.identity, Time.deltaTime);
     }
 
-  }
+}
