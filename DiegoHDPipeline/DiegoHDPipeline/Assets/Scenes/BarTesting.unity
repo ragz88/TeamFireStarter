@@ -13308,6 +13308,11 @@ Prefab:
       propertyPath: m_Layer
       value: 14
       objectReference: {fileID: 0}
+    - target: {fileID: 114479332481856768, guid: 4cba3108d876e6441a5531c200e2a241,
+        type: 2}
+      propertyPath: lockMovement
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4cba3108d876e6441a5531c200e2a241, type: 2}
   m_IsPrefabAsset: 0

@@ -13,6 +13,9 @@ public class MoveBehaviour : GenericBehaviour
     public GameObject cam;
     public bool lifting = false;
     public bool pushing = false;
+    public bool lockMovement = false;
+
+
     bool donePushing = false;
     public GameObject pushCollider;
     CapsuleCollider collider;
@@ -53,7 +56,7 @@ public class MoveBehaviour : GenericBehaviour
 	void Update ()
 	{
 
-        if(jump)
+        if(jump && (!lockMovement))
         {
             collider.height = colliderHeight * jumpColliderModifier;
             collider.center.Set(0f, (colliderOffset + jumpColliderOffset), 0f);
@@ -107,11 +110,16 @@ public class MoveBehaviour : GenericBehaviour
 	// LocalFixedUpdate overrides the virtual function of the base class.
 	public override void LocalFixedUpdate()
 	{
-		// Call the basic movement manager.
-		MovementManagement(behaviourManager.GetH, behaviourManager.GetV);
+        if (lockMovement == false)
+        {
+            // Call the basic movement manager.
+            MovementManagement(behaviourManager.GetH, behaviourManager.GetV);
 
-		// Call the jump manager.
-		JumpManagement();
+            // Call the jump manager.
+            JumpManagement();
+
+        }
+		
 	}
 
 	// Execute the idle and walk/run jump movements.
