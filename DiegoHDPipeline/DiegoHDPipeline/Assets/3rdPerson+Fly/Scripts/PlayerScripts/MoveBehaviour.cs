@@ -29,10 +29,12 @@ public class MoveBehaviour : GenericBehaviour
 	private bool jump;                              // Boolean to determine whether or not the player started a jump.
 	private bool isColliding;                       // Boolean to determine if the player has collided with an obstacle.
     private int angle;
+    public DiegoNoises Diego;
 
     // Start is always called after any Awake functions.
     void Start() 
 	{
+        Diego = GetComponent<DiegoNoises>();
         collider = GetComponent<CapsuleCollider>();
         colliderHeight = collider.height;
         colliderOffset = collider.center.y;
@@ -107,7 +109,14 @@ public class MoveBehaviour : GenericBehaviour
                 donePushing = false;
             }
         }
-
+        //if ((this.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("Base Layer.Locomotion") == true))
+        //{
+        //    Diego.PlayWalk();
+        //}
+        if (behaviourManager.IsSprinting())
+        {
+            //Diego.PlayWalk();
+        }
         // Get jump input.
         if (!jump && Input.GetButtonDown(jumpButton) && behaviourManager.IsCurrentBehaviour(this.behaviourCode) && !behaviourManager.IsOverriding())
 		{

@@ -10,9 +10,10 @@ public class DiegoNoises : MonoBehaviour {
     // Use this for initialization
     void Start ()
     {
-        diego.playOnAwake = false;
+        
         diego = this.GetComponent<AudioSource>();
-	}
+        diego.playOnAwake = false;
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -21,14 +22,14 @@ public class DiegoNoises : MonoBehaviour {
 
     public void PlayWalk()
     {
-        diego.Stop();
+       // diego.Stop();
         diego.clip = walkSound;
         diego.Play();
     }
 
     public void PlayJump()
     {
-        diego.Stop();
+       // diego.Stop();
         diego.clip = jumpSound;
         diego.Play();
     }
