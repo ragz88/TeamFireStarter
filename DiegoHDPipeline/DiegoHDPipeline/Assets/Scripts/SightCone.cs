@@ -19,7 +19,7 @@ public class SightCone : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         Eye = transform.parent;
-        objInteraction = GameObject.Find("ThirdPersonController").GetComponentInChildren<ObjectInteractions>();                                     //change when it become Diego!!!!!!!!!!!!
+        objInteraction = GameObject.Find("Diego").GetComponent<ObjectInteractions>();                                     //change when it become Diego!!!!!!!!!!!!
         loseSightTime = seeker.loseSightTime;
     }
 	

@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Scenes/BarTesting.unity
+- path: Assets/Scenes/EnemyCreation.unity
   isLoaded: 1
   isActive: 1

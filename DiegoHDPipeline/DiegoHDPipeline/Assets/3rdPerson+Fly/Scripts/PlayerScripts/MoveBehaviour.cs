@@ -66,8 +66,8 @@ public class MoveBehaviour : GenericBehaviour
             collider.height = colliderHeight;
             collider.center.Set(0f, (colliderOffset), 0f);
         }
-       // print(behaviourManager.IsGrounded());
-        if(Input.GetKey("l"))
+        // print(behaviourManager.IsGrounded());
+        /*if(Input.GetKey("l"))
         {
             lifting = true;
         }
@@ -83,6 +83,14 @@ public class MoveBehaviour : GenericBehaviour
         else
         {
             pushing = false;
+            pushCollider.SetActive(false);
+        }*/
+        if (pushing)
+        {
+            pushCollider.SetActive(true);
+        }
+        else
+        {
             pushCollider.SetActive(false);
         }
         behaviourManager.GetAnim.SetBool("Lifting", lifting);
