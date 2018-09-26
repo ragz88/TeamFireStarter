@@ -97,15 +97,18 @@ public class ObjectInteractions : MonoBehaviour {
             nextToPushable = false;
         }
         Debug.DrawRay(transform.position + new Vector3(0, 1, 0), (transform.forward + new Vector3(0, -0.5f, 0)).normalized*0.75f, Color.magenta);
-        
 
-        if (nextToPickup && !holdingPickup && !pushingObject && !objectToLift.GetComponent<LiftableObject>().beingCarried)
+
+        if (objectToLift != null)
         {
-            if (Input.GetKeyDown(KeyCode.E))
+            if (nextToPickup && !holdingPickup && !pushingObject && !objectToLift.GetComponent<LiftableObject>().beingCarried)
             {
-                //lerpingPickup = true;
-                
-                LiftObject();
+                if (Input.GetKeyDown(KeyCode.E))
+                {
+                    //lerpingPickup = true;
+
+                    LiftObject();
+                }
             }
         }
 
@@ -118,7 +121,9 @@ public class ObjectInteractions : MonoBehaviour {
                 characterControl.lockMovement = true;
                 characterControl.isPushing = true;
                 character.pushingObject = true;
-                objectToPush.GetComponent<Rigidbody>().mass = 2f;
+                objectToPush.GetComponent<Rigidbody>().mass = 200f;
+                gameObject.GetComponent<MoveBehaviour>().pushing = true;
+
                 //objectToPush.GetComponent<Rigidbody>().isKinematic = true;
                 //Physics.IgnoreCollision(objectToPush.GetComponent<Collider>(), gameObject.transform.parent.GetComponent<Collider>());
                 //pushPos.position = objectToPush.transform.position;
@@ -157,7 +162,9 @@ public class ObjectInteractions : MonoBehaviour {
                 character.pushingObject = false;
                 characterControl.lockMovement = false;
 
-                objectToPush.GetComponent<Rigidbody>().mass = 1000;
+                objectToPush.GetComponent<Rigidbody>().mass = 100000;
+                gameObject.GetComponent<MoveBehaviour>().pushing = false;
+
                 //Physics.IgnoreCollision(objectToPush.GetComponent<Collider>(), gameObject.transform.parent.GetComponent<Collider>(), false);
             }
             else
