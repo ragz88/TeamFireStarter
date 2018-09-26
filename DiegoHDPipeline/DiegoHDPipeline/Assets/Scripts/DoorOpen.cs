@@ -111,7 +111,7 @@ public class DoorOpen : MonoBehaviour {
                     }
                 }
                 if (Vector3.Distance(Wing1.position, LerpWing1.position) < 3f && Vector3.Distance(Wing2.position, LerpWing2.position) < 3f
-                    && (Vector3.Distance(Block.position, LerpBlock2.position)  < 0.03f || barActivated) && (Disc.localEulerAngles.y % 45 < 0.5f))
+                    && (barActivated || (Block != null && Vector3.Distance(Block.position, LerpBlock2.position)  < 0.03f)) && (Disc.localEulerAngles.y % 45 < 0.5f))
                 {
                     //print(Disc.eulerAngles.y);
                     WingsOpen = true;

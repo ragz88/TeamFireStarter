@@ -104,7 +104,7 @@ public class ObjectInteractions : MonoBehaviour {
         {
             if (nextToPickup && !holdingPickup && !pushingObject && !objectToLift.GetComponent<LiftableObject>().beingCarried)
             {
-                if (Input.GetKeyDown(KeyCode.E) || Input.GetButton("Interact"))
+                if (Input.GetKeyDown(KeyCode.E) || Input.GetButtonDown("Interact"))
                 {
                     //lerpingPickup = true;
 
@@ -115,7 +115,7 @@ public class ObjectInteractions : MonoBehaviour {
 
         if (nextToPushable && !holdingPickup && !pushingObject)
         {
-            if (Input.GetKeyDown(KeyCode.E) || Input.GetButton("Interact"))
+            if (Input.GetKeyDown(KeyCode.E) || Input.GetButtonDown("Interact"))
             {
                 transitioning = true;
                 pushingObject = true;
@@ -145,7 +145,7 @@ public class ObjectInteractions : MonoBehaviour {
 
         if (holdingPickup && !transitioning)
         {
-            if (Input.GetKeyDown(KeyCode.E) || Input.GetButton("Interact"))
+            if (Input.GetKeyDown(KeyCode.E) || Input.GetButtonDown("Interact"))
             {
                 //lerpingPickup = false; 
                 dropObject();
@@ -155,7 +155,7 @@ public class ObjectInteractions : MonoBehaviour {
 
         if (pushingObject && !transitioning)
         {
-            if (Input.GetKeyDown(KeyCode.E) || Input.GetButton("Interact"))
+            if (Input.GetKeyDown(KeyCode.E) || Input.GetButtonDown("Interact"))
             {
                 pushingObject = false;
                 //objectToPush.transform.parent = null;
