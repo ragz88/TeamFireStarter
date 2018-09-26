@@ -11,6 +11,7 @@ public class ObjectInteractions : MonoBehaviour {
     public Transform liftPos;
     public Transform pushPos;
     public float liftSpeed = 0.1f;
+    float currentLiftSpeed = 0.1f;
 
     bool nextToPickup = false;
     bool nextToPushable = false;
@@ -103,7 +104,7 @@ public class ObjectInteractions : MonoBehaviour {
         {
             if (nextToPickup && !holdingPickup && !pushingObject && !objectToLift.GetComponent<LiftableObject>().beingCarried)
             {
-                if (Input.GetKeyDown(KeyCode.E))
+                if (Input.GetKeyDown(KeyCode.E) || Input.GetButton("Interact"))
                 {
                     //lerpingPickup = true;
 
@@ -114,7 +115,7 @@ public class ObjectInteractions : MonoBehaviour {
 
         if (nextToPushable && !holdingPickup && !pushingObject)
         {
-            if (Input.GetKeyDown(KeyCode.E))
+            if (Input.GetKeyDown(KeyCode.E) || Input.GetButton("Interact"))
             {
                 transitioning = true;
                 pushingObject = true;
@@ -144,7 +145,7 @@ public class ObjectInteractions : MonoBehaviour {
 
         if (holdingPickup && !transitioning)
         {
-            if (Input.GetKeyDown(KeyCode.E))
+            if (Input.GetKeyDown(KeyCode.E) || Input.GetButton("Interact"))
             {
                 //lerpingPickup = false; 
                 dropObject();
@@ -154,7 +155,7 @@ public class ObjectInteractions : MonoBehaviour {
 
         if (pushingObject && !transitioning)
         {
-            if (Input.GetKeyDown(KeyCode.E))
+            if (Input.GetKeyDown(KeyCode.E) || Input.GetButton("Interact"))
             {
                 pushingObject = false;
                 //objectToPush.transform.parent = null;
@@ -201,8 +202,9 @@ public class ObjectInteractions : MonoBehaviour {
             }
         }
 
-        if (holdingPickup)
+        if (holdingPickup && lerpingPickup)
         {
+            objectToLift.transform.LookAt(liftPos.position + transform.forward);
             objectToLift.transform.position = Vector3.Lerp(objectToLift.transform.position, liftPos.position, liftSpeed);
         }
 
@@ -215,20 +217,52 @@ public class ObjectInteractions : MonoBehaviour {
     }
     public void LiftObject()
     {
+        Invoke("finishLift", 1.3f);
         holdingPickup = true;
         objectToLift.GetComponent<Rigidbody>().useGravity = false;
         objectToLift.GetComponent<Rigidbody>().isKinematic = true;
+        
         transitioning = true;
         objectToLift.GetComponent<LiftableObject>().beingCarried = true;
         objectToLift.GetComponent<LiftableObject>().Interactions = this;
+        Physics.IgnoreCollision(objectToLift.GetComponent<Collider>(), gameObject.transform.GetComponent<Collider>());
+        if (characterControl != null)
+        {
+            characterControl.lifting = true;
+        }
+    }
+
+    void finishLift()
+    {
+        //holdingPickup = true;
+        lerpingPickup = true;
+        //objectToLift.GetComponent<Rigidbody>().useGravity = false;
+        //objectToLift.GetComponent<Rigidbody>().isKinematic = true;
+        currentLiftSpeed = 4f;
+        //transitioning = true;
+        //objectToLift.GetComponent<LiftableObject>().beingCarried = true;
+        //objectToLift.GetComponent<LiftableObject>().Interactions = this;
+        //Physics.IgnoreCollision(objectToLift.GetComponent<Collider>(), gameObject.transform.GetComponent<Collider>());
+        //if (characterControl != null)
+        //{
+        //    characterControl.lifting = true;
+        //}
     }
 
     public void dropObject()
     {
         holdingPickup = false;
+        lerpingPickup = false;
+        currentLiftSpeed = liftSpeed;
         objectToLift.GetComponent<Rigidbody>().isKinematic = false;
         objectToLift.GetComponent<Rigidbody>().useGravity = true;
         objectToLift.GetComponent<LiftableObject>().beingCarried = false;
         objectToLift.GetComponent<LiftableObject>().Interactions = null;
+        Physics.IgnoreCollision(objectToLift.GetComponent<Collider>(), gameObject.transform.GetComponent<Collider>(),false);
+        if (characterControl != null)
+        {
+            characterControl.lifting = false;
+        }
+        CancelInvoke("finishLift");
     }
 }

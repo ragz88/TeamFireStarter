@@ -135,8 +135,8 @@ public class Seeker : MonoBehaviour {
             agent.speed = chaseSpeed;
             agent.angularSpeed = chaseAngularSpeed;
 
-            if (Vector3.Distance(energyCubeTarget.transform.position, transform.position) < 15f)   //Change to hide out of sight
-            {
+            //if (Vector3.Distance(energyCubeTarget.transform.position, transform.position) < 15f)   //Change to hide out of sight
+            //{
                 if (Vector3.Distance(energyCubeTarget.transform.position, transform.position) < 2.85f)
                 {
                     seekState = seekerState.Destroying;
@@ -146,11 +146,11 @@ public class Seeker : MonoBehaviour {
                 {
                     agent.SetDestination(energyCubeTarget.transform.position);
                 }
-            }
-            else
-            {
-                seekState = seekerState.Destroying;
-            }
+            //}
+            //else
+            //{
+            //    seekState = seekerState.Destroying;
+            //}
 
         }
         else if (seekState == seekerState.Destroying)

@@ -12,6 +12,7 @@ public class BarActivator : MonoBehaviour {
     public float startIntensity = 1;
     public float endIntensity = 60;
     public float intensityChangeSpeed = 0.25f;
+    public MovableObjects[] movingObjects;
 
     bool isActive = false;
     float padIntensity = 1;
@@ -72,6 +73,10 @@ public class BarActivator : MonoBehaviour {
                 bars[i].Fill();
             }
             isActive = true;
+            for (int i = 0; i < movingObjects.Length; i++)
+            {
+                movingObjects[i].isActive = true;
+            }
         }
         
     }
@@ -85,6 +90,10 @@ public class BarActivator : MonoBehaviour {
                 bars[i].Empty();
             }
             isActive = false;
+            for (int i = 0; i < movingObjects.Length; i++)
+            {
+                movingObjects[i].isActive = false;
+            }
         }
     }
 }

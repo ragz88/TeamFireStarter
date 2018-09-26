@@ -10,6 +10,7 @@ public class MovableObjects : MonoBehaviour {
     public bool isActive = false;
     public bool returnOnInactive = false;
     public float movementSpeed = 0.1f;
+    public float stoppingDistance = 0.05f;
 
     public LoadingBar[] activatingBars;
 
@@ -53,7 +54,7 @@ public class MovableObjects : MonoBehaviour {
         if (isActive && !completedMovement)
         {
             transform.position = Vector3.Lerp(transform.position, movePoints[destinationNum],movementSpeed);
-            if (Vector3.Distance(transform.position, movePoints[destinationNum]) < 0.05f)
+            if (Vector3.Distance(transform.position, movePoints[destinationNum]) < stoppingDistance)
             {
                 destinationNum++;
                 if (destinationNum > movePoints.Length - 1)
@@ -71,7 +72,7 @@ public class MovableObjects : MonoBehaviour {
         {
             if (returnOnInactive && !isActive)
             {
-                if (Vector3.Distance(transform.position, initPos) > 0.05f)
+                if (Vector3.Distance(transform.position, initPos) > stoppingDistance)
                 {
                     transform.position = Vector3.Lerp(transform.position, initPos, movementSpeed);
                 }
@@ -82,4 +83,20 @@ public class MovableObjects : MonoBehaviour {
             }
         }
 	}
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "PlayerBody")
+        {
+            other.gameObject.transform.parent = transform;
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.tag == "PlayerBody")
+        {
+            other.gameObject.transform.parent = null;
+        }
+    }
 }

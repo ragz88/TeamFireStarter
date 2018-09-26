@@ -23,12 +23,17 @@ public class EnvironmentalPushable : MonoBehaviour {
     {
         if (other.gameObject.tag == "PlayerBody")
         {
-            if (Input.GetKeyDown(KeyCode.E) && !animPlayed)
+            if ((Input.GetKeyDown(KeyCode.E) || Input.GetButtonDown("Interact")) && !animPlayed)
             {
                 animPlayed = true;
                 anim.SetBool("playAnim", true);
                 //anim.StartPlayback();
             }
+        }
+        else if (other.gameObject.tag == "Pushable")
+        {
+            animPlayed = true;
+            anim.SetBool("playAnim", true);
         }
     }
 }

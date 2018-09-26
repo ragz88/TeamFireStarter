@@ -27,6 +27,9 @@ public class DoorOpen : MonoBehaviour {
     public float WingsDelay = 0.5f;
     public float doorDelay = 0.5f;
 
+    public bool barActivated = false;
+    public LoadingBar bar;
+
     Transform Block;
 
     [HideInInspector]
@@ -52,16 +55,25 @@ public class DoorOpen : MonoBehaviour {
             Activated = true;
         }
 
-        if (BlockFound && !Activated && !DoorOpened)
+        if (BlockFound && !Activated && !DoorOpened && !barActivated)
         {
             Block.gameObject.GetComponent<Rigidbody>().useGravity = false;
             Block.gameObject.GetComponent<Rigidbody>().isKinematic = true;
+            Block.gameObject.GetComponent<Animator>().enabled = false;
             Block.position = Vector3.Lerp(Block.position, LerpBlock1.position, BlockSpeed);
             //Block.eulerAngles = Vector3.Lerp(Block.eulerAngles, new Vector3(0,0,0), 0.01f);
             Block.rotation = Quaternion.Slerp(Block.rotation, Quaternion.identity, 0.05f);
             if (Vector3.Distance(Block.position, LerpBlock1.position) < 0.05f && Quaternion.Angle(Block.rotation,Quaternion.identity) < 1.5f)
             {
                 Block.parent = Disc;
+                Activated = true;
+            }
+        }
+
+        if (barActivated)
+        {
+            if (bar.currentFillNum > 0.97f)
+            {
                 Activated = true;
             }
         }
@@ -91,14 +103,17 @@ public class DoorOpen : MonoBehaviour {
                 Disc.Rotate(0,DiscSpeed,0);
                 Wing1.position = Vector3.Lerp(Wing1.position, LerpWing1.position, WingSpeed);
                 Wing2.position = Vector3.Lerp(Wing2.position, LerpWing2.position, WingSpeed);
-                if (Vector3.Distance(Block.position, LerpBlock2.position) > 0.03f)
+                if (!barActivated)
                 {
-                    Block.position = Vector3.Lerp(Block.position, LerpBlock2.position, (BlockSpeed/10));
+                    if (Vector3.Distance(Block.position, LerpBlock2.position) > 0.03f)
+                    {
+                        Block.position = Vector3.Lerp(Block.position, LerpBlock2.position, (BlockSpeed / 10));
+                    }
                 }
                 if (Vector3.Distance(Wing1.position, LerpWing1.position) < 3f && Vector3.Distance(Wing2.position, LerpWing2.position) < 3f
-                    && Vector3.Distance(Block.position, LerpBlock2.position) < 0.03f && (Disc.localEulerAngles.y % 45 < 0.5f))
+                    && (Vector3.Distance(Block.position, LerpBlock2.position)  < 0.03f || barActivated) && (Disc.localEulerAngles.y % 45 < 0.5f))
                 {
-                    print(Disc.eulerAngles.y);
+                    //print(Disc.eulerAngles.y);
                     WingsOpen = true;
                     Invoke("OpenDoor", doorDelay);
                 }
@@ -147,7 +162,7 @@ public class DoorOpen : MonoBehaviour {
 
     void OnTriggerStay(Collider hit)
     {
-        if (!BlockFound)
+        if (!BlockFound && !barActivated)
         {
             if (hit.gameObject.tag == "EnergySource")
             {
