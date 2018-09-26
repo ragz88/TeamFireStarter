@@ -75,7 +75,7 @@ public class MoveBehaviour : GenericBehaviour
         {
             lifting = false;
         }
-        if (Input.GetKey("p"))
+        /*if (Input.GetKey("p"))
         {
             pushing = true;
             pushCollider.SetActive(true);
@@ -83,6 +83,14 @@ public class MoveBehaviour : GenericBehaviour
         else
         {
             pushing = false;
+            pushCollider.SetActive(false);
+        }*/
+        if (pushing)
+        {
+            pushCollider.SetActive(true);
+        }
+        else
+        {
             pushCollider.SetActive(false);
         }
         behaviourManager.GetAnim.SetBool("Lifting", lifting);

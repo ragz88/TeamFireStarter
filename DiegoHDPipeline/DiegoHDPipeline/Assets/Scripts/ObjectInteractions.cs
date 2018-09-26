@@ -29,8 +29,8 @@ public class ObjectInteractions : MonoBehaviour {
 
     public LayerMask rayMask;
 
-    ThirdPersonUserControl characterControl;
-    ThirdPersonCharacter character;
+    public MoveBehaviour characterControl;
+    //ThirdPersonCharacter character;
 
     Text promptText;
 
@@ -41,8 +41,8 @@ public class ObjectInteractions : MonoBehaviour {
     // Use this for initialization
     void Start () {
         promptText = prompt.GetComponent<Text>();
-        characterControl = gameObject.GetComponentInParent<ThirdPersonUserControl>();
-        character = gameObject.GetComponentInParent<ThirdPersonCharacter>();
+        characterControl = gameObject.GetComponent<MoveBehaviour>();
+        //character = gameObject.GetComponentInParent<ThirdPersonCharacter>();
     }
 	
 	// Update is called once per frame
@@ -119,10 +119,10 @@ public class ObjectInteractions : MonoBehaviour {
                 transitioning = true;
                 pushingObject = true;
                 characterControl.lockMovement = true;
-                characterControl.isPushing = true;
-                character.pushingObject = true;
+                characterControl.pushing = true;
+                //character.pushingObject = true;
                 objectToPush.GetComponent<Rigidbody>().mass = 200f;
-                gameObject.GetComponent<MoveBehaviour>().pushing = true;
+                //gameObject.GetComponent<MoveBehaviour>().pushing = true;
 
                 //objectToPush.GetComponent<Rigidbody>().isKinematic = true;
                 //Physics.IgnoreCollision(objectToPush.GetComponent<Collider>(), gameObject.transform.parent.GetComponent<Collider>());
@@ -157,32 +157,45 @@ public class ObjectInteractions : MonoBehaviour {
             if (Input.GetKeyDown(KeyCode.E))
             {
                 pushingObject = false;
-                objectToPush.transform.parent = null;
-                characterControl.isPushing = false;
-                character.pushingObject = false;
+                //objectToPush.transform.parent = null;
+                characterControl.pushing = false;
+                //character.pushingObject = false;
                 characterControl.lockMovement = false;
 
                 objectToPush.GetComponent<Rigidbody>().mass = 100000;
-                gameObject.GetComponent<MoveBehaviour>().pushing = false;
+                //gameObject.GetComponent<MoveBehaviour>().pushing = false;
 
                 //Physics.IgnoreCollision(objectToPush.GetComponent<Collider>(), gameObject.transform.parent.GetComponent<Collider>(), false);
             }
             else
             {
-                if (Vector3.Distance(transform.parent.position, new Vector3(pushPoint.x, transform.position.y, pushPoint.z)) > 0.03f && characterControl.lockMovement)
+                if (Vector3.Distance(transform.position, new Vector3(pushPoint.x, transform.position.y, pushPoint.z)) > 0.03f && characterControl.lockMovement)
                 {
-                    transform.parent.position = Vector3.Lerp(transform.position, new Vector3(pushPoint.x, transform.position.y, pushPoint.z), 0.5f);
-                    Physics.IgnoreCollision(objectToPush.GetComponent<Collider>(), gameObject.transform.parent.GetComponent<Collider>());
+                    transform.position = Vector3.Lerp(transform.position, new Vector3(pushPoint.x, transform.position.y, pushPoint.z), 0.5f);
+                    Physics.IgnoreCollision(objectToPush.GetComponent<Collider>(), gameObject.transform.GetComponent<Collider>());
                     //play moving anim here
                 }
                 else
                 {
                     if (characterControl.lockMovement)
                     {
-                        Physics.IgnoreCollision(objectToPush.GetComponent<Collider>(), gameObject.transform.parent.GetComponent<Collider>(),false);
+                        Physics.IgnoreCollision(objectToPush.GetComponent<Collider>(), gameObject.transform.GetComponent<Collider>(),false);
                         characterControl.lockMovement = false;
-                        transform.parent.LookAt(new Vector3(objectToPush.transform.position.x, transform.position.y, objectToPush.transform.position.z));
+                        transform.LookAt(new Vector3(objectToPush.transform.position.x, transform.position.y, objectToPush.transform.position.z));
                         //objectToPush.transform.parent = transform.parent;
+                    }
+                    else
+                    {
+                        transform.LookAt(new Vector3(objectToPush.transform.position.x, transform.position.y, objectToPush.transform.position.z));
+                        if (Vector3.Distance(transform.position, new Vector3(pushPoint.x, transform.position.y, pushPoint.z)) > 3f)
+                        {
+                            pushingObject = false;
+                            characterControl.pushing = false;
+                            characterControl.lockMovement = false;
+                            print(Vector3.Distance(transform.position, new Vector3(pushPoint.x, transform.position.y, pushPoint.z)));
+
+                            objectToPush.GetComponent<Rigidbody>().mass = 100000;
+                        }
                     }
                 }
             }

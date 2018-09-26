@@ -879,6 +879,7 @@ MonoBehaviour:
   rayMask:
     serializedVersion: 2
     m_Bits: 0
+  characterControl: {fileID: 0}
 --- !u!114 &77851952
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9639,7 +9640,8 @@ MonoBehaviour:
   objectToPush: {fileID: 0}
   rayMask:
     serializedVersion: 2
-    m_Bits: 12087
+    m_Bits: 11575
+  characterControl: {fileID: 0}
 --- !u!4 &389073221 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4629598575238474, guid: 4cba3108d876e6441a5531c200e2a241,
@@ -25592,6 +25594,7 @@ MonoBehaviour:
   rayMask:
     serializedVersion: 2
     m_Bits: 0
+  characterControl: {fileID: 0}
 --- !u!1 &1487188941
 GameObject:
   m_ObjectHideFlags: 0
@@ -27062,6 +27065,7 @@ MonoBehaviour:
   rayMask:
     serializedVersion: 2
     m_Bits: 0
+  characterControl: {fileID: 0}
 --- !u!136 &1586210684
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -35248,6 +35252,27 @@ Prefab:
     - target: {fileID: 4700762677318182, guid: cf4d169c90e9bf647a1da4fecc72fd83, type: 2}
       propertyPath: m_RootOrder
       value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 54128244324956484, guid: cf4d169c90e9bf647a1da4fecc72fd83,
+        type: 2}
+      propertyPath: m_Mass
+      value: 100000
+      objectReference: {fileID: 0}
+    - target: {fileID: 4506514932528362, guid: cf4d169c90e9bf647a1da4fecc72fd83, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4794738213178084, guid: cf4d169c90e9bf647a1da4fecc72fd83, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4882859468589108, guid: cf4d169c90e9bf647a1da4fecc72fd83, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: -1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4447229895530308, guid: cf4d169c90e9bf647a1da4fecc72fd83, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: -1.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cf4d169c90e9bf647a1da4fecc72fd83, type: 2}
