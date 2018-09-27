@@ -7,6 +7,7 @@ using UnityStandardAssets.Characters.ThirdPerson;
 public class ObjectInteractions : MonoBehaviour {
 
     //public string[] pickupTags;
+    public bool enemy = false;
     public GameObject prompt;
     public Transform liftPos;
     public Transform pushPos;
@@ -36,7 +37,7 @@ public class ObjectInteractions : MonoBehaviour {
     Text promptText;
 
     PushableObject pushBoxController;
-    Vector3 pushPoint;
+    Transform pushPoint;
     //bool lockMovement = false;
 
     // Use this for initialization
@@ -139,7 +140,7 @@ public class ObjectInteractions : MonoBehaviour {
                         nearestPoint = i;
                     }
                 }
-                pushPoint = pushBoxController.pushPoints[nearestPoint].position;
+                pushPoint = pushBoxController.pushPoints[nearestPoint];
             }
         }
 
@@ -155,6 +156,8 @@ public class ObjectInteractions : MonoBehaviour {
 
         if (pushingObject && !transitioning)
         {
+            //print(pushPos.position);
+
             if (Input.GetKeyDown(KeyCode.E) || Input.GetButtonDown("Interact"))
             {
                 pushingObject = false;
@@ -170,17 +173,17 @@ public class ObjectInteractions : MonoBehaviour {
             }
             else
             {
-                if (Vector3.Distance(transform.position, new Vector3(pushPoint.x, transform.position.y, pushPoint.z)) > 0.03f && characterControl.lockMovement)
+                if (Vector3.Distance(transform.position, new Vector3(pushPoint.position.x, transform.position.y, pushPoint.position.z)) > 0.03f && characterControl.lockMovement)
                 {
-                    transform.position = Vector3.Lerp(transform.position, new Vector3(pushPoint.x, transform.position.y, pushPoint.z), 0.5f);
+                    transform.position = Vector3.Lerp(transform.position, new Vector3(pushPoint.position.x, transform.position.y, pushPoint.position.z), 0.5f);
                     Physics.IgnoreCollision(objectToPush.GetComponent<Collider>(), gameObject.transform.GetComponent<Collider>());
                     //play moving anim here
                 }
                 else
                 {
+                    Physics.IgnoreCollision(objectToPush.GetComponent<Collider>(), gameObject.transform.GetComponent<Collider>(), false);
                     if (characterControl.lockMovement)
                     {
-                        Physics.IgnoreCollision(objectToPush.GetComponent<Collider>(), gameObject.transform.GetComponent<Collider>(),false);
                         characterControl.lockMovement = false;
                         transform.LookAt(new Vector3(objectToPush.transform.position.x, transform.position.y, objectToPush.transform.position.z));
                         //objectToPush.transform.parent = transform.parent;
@@ -188,12 +191,13 @@ public class ObjectInteractions : MonoBehaviour {
                     else
                     {
                         transform.LookAt(new Vector3(objectToPush.transform.position.x, transform.position.y, objectToPush.transform.position.z));
-                        if (Vector3.Distance(transform.position, new Vector3(pushPoint.x, transform.position.y, pushPoint.z)) > 3f)
+                        if (Vector3.Distance(pushPos.position, new Vector3(pushPoint.position.x, pushPos.position.y, pushPoint.position.z)) > 1.5f)
                         {
                             pushingObject = false;
                             characterControl.pushing = false;
                             characterControl.lockMovement = false;
-                            print(Vector3.Distance(transform.position, new Vector3(pushPoint.x, transform.position.y, pushPoint.z)));
+                            //print(Vector3.Distance(pushPos.position, new Vector3(pushPoint.position.x, pushPos.position.y, pushPoint.position.z)));
+                            
 
                             objectToPush.GetComponent<Rigidbody>().mass = 100000;
                         }
@@ -225,7 +229,10 @@ public class ObjectInteractions : MonoBehaviour {
         transitioning = true;
         objectToLift.GetComponent<LiftableObject>().beingCarried = true;
         objectToLift.GetComponent<LiftableObject>().Interactions = this;
-        Physics.IgnoreCollision(objectToLift.GetComponent<Collider>(), gameObject.transform.GetComponent<Collider>());
+        if (!enemy)
+        {
+            Physics.IgnoreCollision(objectToLift.GetComponent<Collider>(), gameObject.transform.GetComponent<Collider>());
+        }
         if (characterControl != null)
         {
             characterControl.lifting = true;
@@ -258,8 +265,11 @@ public class ObjectInteractions : MonoBehaviour {
         objectToLift.GetComponent<Rigidbody>().useGravity = true;
         objectToLift.GetComponent<LiftableObject>().beingCarried = false;
         objectToLift.GetComponent<LiftableObject>().Interactions = null;
-        Physics.IgnoreCollision(objectToLift.GetComponent<Collider>(), gameObject.transform.GetComponent<Collider>(),false);
-        if (characterControl != null)
+        if (!enemy)
+        {
+            Physics.IgnoreCollision(objectToLift.GetComponent<Collider>(), gameObject.transform.GetComponent<Collider>(), false);
+        }
+            if (characterControl != null)
         {
             characterControl.lifting = false;
         }

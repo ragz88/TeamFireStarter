@@ -18,13 +18,13 @@ public class LoadingBar : MonoBehaviour {
 	void Start () {
 		if (bar.fillMethod == Image.FillMethod.Horizontal)
 		{
-			fillSpeed = (fillSpeed * 0.01f)/bar.rectTransform.rect.width;
-            emptySpeed = (emptySpeed * 0.01f) / bar.rectTransform.rect.width;
+			fillSpeed = (fillSpeed /** 0.01f*/)/bar.rectTransform.rect.width;
+            emptySpeed = (emptySpeed /** 0.01f*/) / bar.rectTransform.rect.width;
         }
 		else if (bar.fillMethod == Image.FillMethod.Vertical)
 		{
-			fillSpeed = (fillSpeed * 0.01f) / bar.rectTransform.rect.height;
-            emptySpeed = (emptySpeed * 0.01f) / bar.rectTransform.rect.height;
+			fillSpeed = (fillSpeed /** 0.01f*/) / bar.rectTransform.rect.height;
+            emptySpeed = (emptySpeed /** 0.01f*/) / bar.rectTransform.rect.height;
         }
 
 		currentFillNum = bar.fillAmount;
@@ -37,7 +37,7 @@ public class LoadingBar : MonoBehaviour {
 		{
 			if (currentFillNum < 1)
 			{
-				currentFillNum = currentFillNum + fillSpeed;
+				currentFillNum = currentFillNum + (fillSpeed*Time.deltaTime);
 				bar.fillAmount = currentFillNum;
 			}
 			else
@@ -70,7 +70,7 @@ public class LoadingBar : MonoBehaviour {
                 }
                 if (currentFillNum > 0 && emptyLinkedBarFound) 
 				{
-					currentFillNum = currentFillNum - emptySpeed;
+					currentFillNum = currentFillNum - (emptySpeed*Time.deltaTime);
 					bar.fillAmount = currentFillNum;
 				}
 				else

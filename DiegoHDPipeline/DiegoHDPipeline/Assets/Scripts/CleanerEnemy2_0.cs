@@ -30,6 +30,10 @@ public class CleanerEnemy2_0 : MonoBehaviour
     //public Quaternion initDir;
     public Vector3 initHerbPos;
 
+    AudioSource beeper;
+    public AudioClip wallBeep;
+    public AudioClip barBeep;
+
     // Use this for initialization
     void Start()
     {
@@ -47,6 +51,8 @@ public class CleanerEnemy2_0 : MonoBehaviour
         {
             turnDirectionInt = 1;
         }
+
+        beeper = gameObject.GetComponent<AudioSource>();
 
         /*movePoints = new Vector3[moveTransforms.Length];
 		for (int i = 0; i < moveTransforms.Length; i++)
@@ -71,6 +77,8 @@ public class CleanerEnemy2_0 : MonoBehaviour
                 bar = rayHit.collider.gameObject.GetComponent<LoadingBar>();
                 if (bar.currentFillNum > 0.25f)
                 {
+                    beeper.clip = barBeep;
+                    beeper.Play();
                     initHerbPos = transform.position;
                     isCleaning = true;
                     agent.speed = 0.1f;
@@ -83,8 +91,10 @@ public class CleanerEnemy2_0 : MonoBehaviour
             {
                 if (Physics.Raycast(transform.position, transform.forward, out rayHit, 2f, rayMask))
                 {
-                    if ((rayHit.collider.gameObject.tag == "Wall" || rayHit.collider.gameObject.tag == "Pushable") && !isTurning && (Vector3.Angle(transform.forward, moveTransforms[currentPos].position - transform.position) < 1f))
+                    if ((rayHit.collider.gameObject.tag == "Wall" || rayHit.collider.gameObject.tag == "Pushable") && !isTurning && (Vector3.Angle(transform.forward, moveTransforms[currentPos].position - transform.position) < 5f))
                     {
+                        beeper.clip = wallBeep;
+                        beeper.Play();
                         isTurning = true;
                         currentPos = (currentPos + turnDirectionInt) % 4;
                         if (currentPos == -1)

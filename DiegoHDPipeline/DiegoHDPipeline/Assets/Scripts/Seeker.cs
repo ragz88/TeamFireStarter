@@ -60,6 +60,13 @@ public class Seeker : MonoBehaviour {
     ObjectInteractions myObjectHandler;
     bool destroyingObject = false;
 
+    AudioSource beeper;
+    public AudioClip alarm;
+    public AudioClip wallBeep;
+    public float alarmVolume = 0.5f;
+    float initPitch;
+    float initVolume;
+
     [HideInInspector]
     public LiftableObject energyCubeTarget;
 
@@ -87,12 +94,28 @@ public class Seeker : MonoBehaviour {
         passiveEyeMat = rend.material;
 
         myObjectHandler = gameObject.GetComponent<ObjectInteractions>();
+
+        beeper = gameObject.GetComponent<AudioSource>();
+        initPitch = beeper.pitch;
+        initVolume = beeper.volume;
     }
 	
 	// Update is called once per frame
 	void Update () {
         if (seekState == seekerState.Patrol)
         {
+            if (beeper.isPlaying && beeper.clip == alarm)
+            {
+                if (beeper.volume > 0.05f)
+                {
+                    beeper.volume -= 0.03f;
+                }
+                else
+                {
+                    beeper.Stop();
+                    beeper.loop = false;
+                }
+            }
             //here we do our raycasting
             if (Vector3.Distance(transform.position, patrolPoints[currentPatrolPoint].position) < 0.3f)
             {
@@ -101,6 +124,13 @@ public class Seeker : MonoBehaviour {
                 turning = true;
                 agent.speed = turnSpeed;
                 Invoke("stopTurning", 1f);
+                if (!beeper.isPlaying || (beeper.clip == alarm && beeper.isPlaying))
+                {
+                    beeper.clip = wallBeep;
+                    beeper.pitch = initPitch;
+                    beeper.volume = initVolume;
+                    beeper.Play();
+                }
             }
             agent.SetDestination(patrolPoints[currentPatrolPoint].position);
 
@@ -118,6 +148,14 @@ public class Seeker : MonoBehaviour {
         }
         else if (seekState == seekerState.Chasing)
         {
+            if (!beeper.isPlaying)
+            {
+                beeper.clip = alarm;
+                beeper.pitch = 1;
+                beeper.volume = alarmVolume;
+                beeper.Play();
+                beeper.loop = true;
+            }
             Eye.LookAt(energyCubeTarget.transform);
             //eyeRot = Eye.eulerAngles.y;
             //Eye.localEulerAngles = new Vector3(0, eyeRot, 0);
@@ -166,6 +204,18 @@ public class Seeker : MonoBehaviour {
                 myObjectHandler.objectToLift = energyCubeTarget.gameObject;
                 myObjectHandler.LiftObject();
                 destroyingObject = true;
+                if (beeper.isPlaying)
+                {
+                    if (beeper.clip == alarm && beeper.volume > 0.05f)
+                    {
+                        beeper.volume -= 0.03f;
+                    }
+                    else
+                    {
+                        beeper.Stop();
+                        beeper.loop = false;
+                    }
+                }
                 energyCubeTarget.Dissolve();
             }
 
@@ -183,6 +233,19 @@ public class Seeker : MonoBehaviour {
                     eyeLights[i].color = PassiveEyeColours[i];
                 }
                 rend.material = passiveEyeMat;
+            }
+
+            if (beeper.isPlaying)
+            {
+                if (beeper.clip == alarm && beeper.volume > 0.05f)
+                {
+                    beeper.volume -= 0.03f;
+                }
+                else
+                {
+                    beeper.Stop();
+                    beeper.loop = false;
+                }
             }
 
             if (Vector3.Distance(transform.position, initPatrolPos) < 0.2f)

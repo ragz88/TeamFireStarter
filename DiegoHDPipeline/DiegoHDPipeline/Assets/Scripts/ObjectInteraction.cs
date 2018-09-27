@@ -129,7 +129,7 @@ public class ObjectInteraction : MonoBehaviour {
             if (!foundPickUp && hit.tag == "Pushable")
             {
                 nextToPushable = true;
-                print("boop");
+                //print("boop");
                 pushObject = hit.gameObject;
             }
         }

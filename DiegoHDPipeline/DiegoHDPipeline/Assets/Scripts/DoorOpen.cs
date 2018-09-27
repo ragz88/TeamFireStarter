@@ -30,6 +30,8 @@ public class DoorOpen : MonoBehaviour {
     public bool barActivated = false;
     public LoadingBar bar;
 
+    AudioSource doorSound;
+
     Transform Block;
 
     [HideInInspector]
@@ -42,9 +44,12 @@ public class DoorOpen : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        FillSpeed = FillSpeed / 100;
-        WingSpeed = WingSpeed / 100;
-        DoorSpeed = DoorSpeed / 100;
+        //FillSpeed = FillSpeed / 100;
+        //WingSpeed = WingSpeed / 100;
+        //DoorSpeed = DoorSpeed / 100;
+        DiscSpeed = DiscSpeed * 100;
+        BlockSpeed = BlockSpeed * 100;
+        doorSound = gameObject.GetComponent<AudioSource>();
 	}
 	
 	// Update is called once per frame
@@ -60,7 +65,7 @@ public class DoorOpen : MonoBehaviour {
             Block.gameObject.GetComponent<Rigidbody>().useGravity = false;
             Block.gameObject.GetComponent<Rigidbody>().isKinematic = true;
             Block.gameObject.GetComponent<Animator>().enabled = false;
-            Block.position = Vector3.Lerp(Block.position, LerpBlock1.position, BlockSpeed);
+            Block.position = Vector3.Lerp(Block.position, LerpBlock1.position, (BlockSpeed*Time.deltaTime));
             //Block.eulerAngles = Vector3.Lerp(Block.eulerAngles, new Vector3(0,0,0), 0.01f);
             Block.rotation = Quaternion.Slerp(Block.rotation, Quaternion.identity, 0.05f);
             if (Vector3.Distance(Block.position, LerpBlock1.position) < 0.05f && Quaternion.Angle(Block.rotation,Quaternion.identity) < 1.5f)
@@ -80,38 +85,62 @@ public class DoorOpen : MonoBehaviour {
 
 		if (Activated)
         {
-            if (FillRing.fillAmount < 1)
+            if (!barActivated)
             {
-                FillRing.fillAmount += FillSpeed;
+                if (FillRing.fillAmount < 1)
+                {
+                    FillRing.fillAmount += (FillSpeed * Time.deltaTime);
+                }
+                else
+                {
+                    DarkRing.gameObject.SetActive(false);
+                    if ((FillBar1.fillAmount < 1 || FillBar2.fillAmount < 1) && !WingsOpening)
+                    {
+                        FillBar1.fillAmount += (FillSpeed * Time.deltaTime);
+                        FillBar2.fillAmount += (FillSpeed * Time.deltaTime);
+                    }
+                    else if (WingsOpening == false)
+                    {
+                        Invoke("OpenWings", WingsDelay);
+                    }
+                }
             }
             else
             {
-                DarkRing.gameObject.SetActive(false);
-                if ((FillBar1.fillAmount < 1 || FillBar2.fillAmount < 1) && !WingsOpening)
+                if (FillBar1.fillAmount < 1 || FillBar2.fillAmount < 1)
                 {
-                    FillBar1.fillAmount += FillSpeed;
-                    FillBar2.fillAmount += FillSpeed;
+                    FillBar1.fillAmount += (FillSpeed * Time.deltaTime);
+                    FillBar2.fillAmount += (FillSpeed * Time.deltaTime);
                 }
-                else if (WingsOpening == false)
+                else
                 {
-                    Invoke("OpenWings", WingsDelay);
+                    if (FillRing.fillAmount < 1 && !WingsOpening)
+                    {
+                        FillRing.fillAmount += (FillSpeed * Time.deltaTime);  
+                    }
+                    else if (WingsOpening == false)
+                    {
+                        DarkRing.gameObject.SetActive(false);
+                        Invoke("OpenWings", WingsDelay);
+                    }
                 }
             }
+            
 
             if (WingsOpening && !WingsOpen)
             {
-                Disc.Rotate(0,DiscSpeed,0);
-                Wing1.position = Vector3.Lerp(Wing1.position, LerpWing1.position, WingSpeed);
-                Wing2.position = Vector3.Lerp(Wing2.position, LerpWing2.position, WingSpeed);
+                Disc.Rotate(0,(DiscSpeed * Time.deltaTime), 0);
+                Wing1.position = Vector3.Lerp(Wing1.position, LerpWing1.position, (WingSpeed * Time.deltaTime));
+                Wing2.position = Vector3.Lerp(Wing2.position, LerpWing2.position, (WingSpeed * Time.deltaTime));
                 if (!barActivated)
                 {
                     if (Vector3.Distance(Block.position, LerpBlock2.position) > 0.03f)
                     {
-                        Block.position = Vector3.Lerp(Block.position, LerpBlock2.position, (BlockSpeed / 10));
+                        Block.position = Vector3.Lerp(Block.position, LerpBlock2.position, ((BlockSpeed * Time.deltaTime) / 10));
                     }
                 }
                 if (Vector3.Distance(Wing1.position, LerpWing1.position) < 3f && Vector3.Distance(Wing2.position, LerpWing2.position) < 3f
-                    && (barActivated || (Block != null && Vector3.Distance(Block.position, LerpBlock2.position)  < 0.03f)) && (Disc.localEulerAngles.y % 45 < 0.5f))
+                    && (barActivated || (Block != null && Vector3.Distance(Block.position, LerpBlock2.position)  < 0.03f)) && (Disc.localEulerAngles.y % 45 < 1f))
                 {
                     //print(Disc.eulerAngles.y);
                     WingsOpen = true;
@@ -121,7 +150,7 @@ public class DoorOpen : MonoBehaviour {
 
             if (DoorOpening && !DoorOpened)
             {
-                Door.position = Vector3.Lerp(Door.position, LerpDoor.position, DoorSpeed);
+                Door.position = Vector3.Lerp(Door.position, LerpDoor.position, (DoorSpeed * Time.deltaTime));
                 if (Vector3.Distance(Door.position, LerpDoor.position) < 0.1f)
                 {
                     DoorOpened = true;
@@ -138,6 +167,7 @@ public class DoorOpen : MonoBehaviour {
             WingsOpening = true;
             LightParts.gameObject.SetActive(true);
             LightParts.Play();
+            doorSound.Play();
             Invoke("HideBars",0.15f);
             Invoke("DestroyParts", 4);
         }
@@ -150,8 +180,10 @@ public class DoorOpen : MonoBehaviour {
 
     void HideBars()
     {
-        FillBar1.fillAmount = 0;
-        FillBar2.fillAmount = 0;
+        //FillBar1.fillAmount = 0;
+        //FillBar2.fillAmount = 0;
+        FillBar1.gameObject.SetActive(false);
+        FillBar2.gameObject.SetActive(false);
     }
 
     void DestroyParts()

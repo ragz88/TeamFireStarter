@@ -5,17 +5,22 @@ using UnityEngine;
 public class LiftableObject : MonoBehaviour {
 
     public Vector3 initialPos;
+    //public Transform partAttractorTrans;
     public bool beingCarried = false;
     public ObjectInteractions Interactions;
     public float dissolveTime = 1;
     public GameObject dissolveEffects;
+    //public ErikParticleAttractorLinear partAttractor;
 
     Animator anim;
+
+    AudioSource dissolveSound;
 
 	// Use this for initialization
 	void Start () {
         initialPos = transform.position;
         anim = gameObject.GetComponent<Animator>();
+        dissolveSound = gameObject.GetComponent<AudioSource>();
         //dissolveTime = 2 * (anim.);
     }
 	
@@ -33,7 +38,9 @@ public class LiftableObject : MonoBehaviour {
         Invoke("Undissolve", 0.1f);
         Invoke("ReturnToInit", dissolveTime/2);
         GameObject tempEffects = Instantiate(dissolveEffects, transform.position, Quaternion.identity) as GameObject;
+        //tempEffects.GetComponentInChildren<particleAttractorLinear>().target = partAttractorTrans;
         tempEffects.transform.LookAt(initialPos);
+        dissolveSound.Play();
     }
 
     void Undissolve()

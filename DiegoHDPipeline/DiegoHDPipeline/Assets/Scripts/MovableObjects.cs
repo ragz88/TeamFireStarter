@@ -14,6 +14,8 @@ public class MovableObjects : MonoBehaviour {
 
     public LoadingBar[] activatingBars;
 
+    public Transform optionalReturnPos;
+
     int destinationNum = 0;
     Vector3 initPos;
     bool completedMovement = false;
@@ -22,7 +24,7 @@ public class MovableObjects : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         initPos = transform.position;
-        movementSpeed = movementSpeed * 0.01f;
+        //movementSpeed = movementSpeed * 0.01f;
         movePoints = new Vector3[moveTransforms.Length];
         for (int i = 0; i < moveTransforms.Length; i++)
         {
@@ -32,6 +34,11 @@ public class MovableObjects : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+
+        if (optionalReturnPos != null)
+        {
+            initPos = optionalReturnPos.position;
+        }
 
         bool unfilledFound = false;
         for (int i = 0; i < activatingBars.Length; i++)
@@ -53,7 +60,7 @@ public class MovableObjects : MonoBehaviour {
 
         if (isActive && !completedMovement)
         {
-            transform.position = Vector3.Lerp(transform.position, movePoints[destinationNum],movementSpeed);
+            transform.position = Vector3.Lerp(transform.position, movePoints[destinationNum],(movementSpeed * Time.deltaTime));
             if (Vector3.Distance(transform.position, movePoints[destinationNum]) < stoppingDistance)
             {
                 destinationNum++;
@@ -74,7 +81,7 @@ public class MovableObjects : MonoBehaviour {
             {
                 if (Vector3.Distance(transform.position, initPos) > stoppingDistance)
                 {
-                    transform.position = Vector3.Lerp(transform.position, initPos, movementSpeed);
+                    transform.position = Vector3.Lerp(transform.position, initPos, (movementSpeed * Time.deltaTime));
                 }
                 else
                 {
