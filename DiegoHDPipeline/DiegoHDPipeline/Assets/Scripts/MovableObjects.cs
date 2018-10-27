@@ -19,10 +19,12 @@ public class MovableObjects : MonoBehaviour {
     int destinationNum = 0;
     Vector3 initPos;
     bool completedMovement = false;
+    float initMoveSpeed;
 
 
 	// Use this for initialization
 	void Start () {
+        initMoveSpeed = movementSpeed;
         initPos = transform.position;
         //movementSpeed = movementSpeed * 0.01f;
         movePoints = new Vector3[moveTransforms.Length];
@@ -60,7 +62,8 @@ public class MovableObjects : MonoBehaviour {
 
         if (isActive && !completedMovement)
         {
-            transform.position = Vector3.Lerp(transform.position, movePoints[destinationNum],(movementSpeed * Time.deltaTime));
+            //transform.position = Vector3.Lerp(transform.position, movePoints[destinationNum],(movementSpeed * Time.deltaTime));
+            transform.position = Vector3.MoveTowards(transform.position, movePoints[destinationNum], (movementSpeed * Time.deltaTime));
             if (Vector3.Distance(transform.position, movePoints[destinationNum]) < stoppingDistance)
             {
                 destinationNum++;
@@ -74,6 +77,10 @@ public class MovableObjects : MonoBehaviour {
                     destinationNum = 0;
                 }
             }
+            else
+            {
+
+            }
         }
         else
         {
@@ -81,7 +88,8 @@ public class MovableObjects : MonoBehaviour {
             {
                 if (Vector3.Distance(transform.position, initPos) > stoppingDistance)
                 {
-                    transform.position = Vector3.Lerp(transform.position, initPos, (movementSpeed * Time.deltaTime));
+                    //transform.position = Vector3.Lerp(transform.position, initPos, (movementSpeed * Time.deltaTime));
+                    transform.position = Vector3.MoveTowards(transform.position, initPos, (movementSpeed * Time.deltaTime));
                 }
                 else
                 {

@@ -8,6 +8,7 @@ public class SightCone : MonoBehaviour {
     public Transform[] sightPoints;
 
     public Seeker seeker;
+    public Golem golem;
     public LayerMask sightMask;
     float loseSightTime;
 
@@ -19,14 +20,21 @@ public class SightCone : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         Eye = transform.parent;
-        objInteraction = GameObject.Find("Diego").GetComponent<ObjectInteractions>();                                     //change when it become Diego!!!!!!!!!!!!
-        loseSightTime = seeker.loseSightTime;
+        objInteraction = GameObject.Find("Diego").GetComponent<ObjectInteractions>();
+        if (seeker != null)
+        {
+            loseSightTime = seeker.loseSightTime;
+        }
+        else
+        {
+            loseSightTime = golem.loseSightTime;
+        }
     }
 	
 	// Update is called once per frame
 	void Update () {
         bool canSeePlayer = false;
-		if (seeker.seekState == Seeker.seekerState.Chasing)
+		if ((seeker != null && seeker.seekState == Seeker.seekerState.Chasing) || (golem != null && golem.golState == Golem.golemState.Chasing))
         {
             for (int i = 0; i < sightPoints.Length; i++)
             {
@@ -51,7 +59,14 @@ public class SightCone : MonoBehaviour {
                 noLineOfSightTime += Time.deltaTime;
                 if (noLineOfSightTime > loseSightTime)
                 {
-                    seeker.seekState = Seeker.seekerState.Returning;
+                    if (seeker != null)
+                    {
+                        seeker.seekState = Seeker.seekerState.Returning;
+                    }
+                    else
+                    {
+                        golem.golState = Golem.golemState.Returning;
+                    }
                 }
             }
         }
@@ -59,14 +74,10 @@ public class SightCone : MonoBehaviour {
 
     private void OnTriggerStay(Collider other)
     {
-        if ((seeker.seekState == Seeker.seekerState.Patrol || seeker.seekState == Seeker.seekerState.Returning) && other.gameObject.tag == "PlayerBody")
+        if ((seeker != null && (seeker.seekState == Seeker.seekerState.Patrol || seeker.seekState == Seeker.seekerState.Returning) && other.gameObject.tag == "PlayerBody") ||
+           (golem != null && ((golem.golState == Golem.golemState.Patrol || golem.golState == Golem.golemState.Returning) && golem.timeSinceDrop > 1.5f) && other.gameObject.tag == "PlayerBody")   )
         {
-            //Debug.DrawRay(Eye.position, Vector3.Normalize(sightPoints[0].position - Eye.position) * 4, Color.cyan);
-            //Debug.DrawRay(Eye.position, Vector3.Normalize(sightPoints[1].position - Eye.position) * 4, Color.cyan);
-            //Debug.DrawRay(Eye.position, Vector3.Normalize(sightPoints[2].position - Eye.position) * 4, Color.cyan);
-            //Debug.DrawRay(Eye.position, Vector3.Normalize(sightPoints[3].position - Eye.position) * 4, Color.cyan);
-            //Debug.DrawRay(Eye.position, Vector3.Normalize(sightPoints[4].position - Eye.position) * 4, Color.cyan);
-
+            
             for (int i = 0; i < sightPoints.Length; i++)
             {
                 RaycastHit rayHit;
@@ -78,9 +89,18 @@ public class SightCone : MonoBehaviour {
                         //objInteraction = rayHit.collider.gameObject.GetComponentInChildren<ObjectInteractions>();
                         if (objInteraction.holdingPickup == true)
                         {
-                            seeker.seekState = Seeker.seekerState.Chasing;
-                            seeker.energyCubeTarget = objInteraction.objectToLift.GetComponent<LiftableObject>();
-                            seeker.initPatrolPos = seeker.transform.position;
+                            if (seeker != null)
+                            {
+                                seeker.seekState = Seeker.seekerState.Chasing;
+                                seeker.energyCubeTarget = objInteraction.objectToLift.GetComponent<LiftableObject>();
+                                seeker.initPatrolPos = seeker.transform.position;
+                            }
+                        }
+                        else if (golem != null)
+                        {
+                            golem.golState = Golem.golemState.Chasing;
+                            golem.diegoTarget = rayHit.collider.gameObject;
+                            golem.initPatrolPos = golem.transform.position;
                         }
                         else
                         {
