@@ -69,7 +69,7 @@ public class BarActivator : MonoBehaviour {
     {
         if (hit.tag == "EnergySource" && hit.GetComponent<LiftableObject>().beingCarried == false)
         {
-            hit.GetComponent<Rigidbody>().useGravity = false;
+            hit.GetComponent<Rigidbody>().isKinematic = true;
             for (int i = 0; i < bars.Length; i++)
             {
                 bars[i].Fill();
@@ -87,14 +87,24 @@ public class BarActivator : MonoBehaviour {
     {
         if (hit.tag == "EnergySource" && hit.GetComponent<LiftableObject>().beingCarried == false)
         {
-            if (Vector3.Distance(hit.transform.position, lockPoint.position) < 0.1f && Quaternion.Angle(hit.transform.rotation, transform.rotation) < 2f)
+            hit.GetComponent<Rigidbody>().isKinematic = true;
+            for (int i = 0; i < bars.Length; i++)
+            {
+                bars[i].Fill();
+            }
+            isActive = true;
+            for (int i = 0; i < movingObjects.Length; i++)
+            {
+                movingObjects[i].isActive = true;
+            }
+            if (Vector3.Distance(hit.transform.position, lockPoint.position) > 0.01f || Quaternion.Angle(hit.transform.rotation, transform.rotation) > 0.1f)
             {
                 hit.transform.position = Vector3.Lerp(hit.transform.position, lockPoint.position, 2.5f * Time.deltaTime);
                 hit.transform.rotation = Quaternion.Slerp(hit.transform.rotation, transform.rotation, 2.5f * Time.deltaTime);
             }
             else
             {
-                hit.GetComponent<Rigidbody>().useGravity = true;
+                hit.GetComponent<Rigidbody>().isKinematic = false;
             }
         }
     }

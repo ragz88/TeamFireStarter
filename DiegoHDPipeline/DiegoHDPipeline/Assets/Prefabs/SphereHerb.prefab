@@ -57,7 +57,7 @@ GameObject:
   - component: {fileID: 114309930254109350}
   - component: {fileID: 82289176453619158}
   m_Layer: 15
-  m_Name: Herb 2.1
+  m_Name: SphereHerb
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1533,8 +1533,8 @@ MonoBehaviour:
   gyroscope: {fileID: 1829051133773944}
   holdingSource: 0
   bar: {fileID: 0}
-  liftPoint: {fileID: 0}
-  dropPoint: {fileID: 0}
+  liftPoint: {fileID: 4727172906620222}
+  dropPoint: {fileID: 4538570391932498}
   liftSpeed: 1
   initHerbPos: {x: 0, y: 0, z: 0}
   wallBeep: {fileID: 8300000, guid: 465435f83eda7414da07b70d5aa7e85e, type: 3}
@@ -1729,7 +1729,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1210350973744842}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0d5307a7a1b82a3478d2bbca4d36fd05, type: 3}
   m_Name: 
