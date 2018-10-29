@@ -34,7 +34,7 @@ public class ObjectInteractions : MonoBehaviour {
     public MoveBehaviour characterControl;
     //ThirdPersonCharacter character;
 
-    Text promptText;
+    //Text promptText;
 
     PushableObject pushBoxController;
     Transform pushPoint;
@@ -42,7 +42,7 @@ public class ObjectInteractions : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        promptText = prompt.GetComponent<Text>();
+        //promptText = prompt.GetComponent<Text>();
         characterControl = gameObject.GetComponent<MoveBehaviour>();
         //character = gameObject.GetComponentInParent<ThirdPersonCharacter>();
     }
@@ -105,6 +105,7 @@ public class ObjectInteractions : MonoBehaviour {
         {
             if (nextToPickup && !holdingPickup && !pushingObject && !objectToLift.GetComponent<LiftableObject>().beingCarried)
             {
+                prompt.SetActive(true);
                 if (Input.GetKeyDown(KeyCode.E) || Input.GetButtonDown("Interact"))
                 {
                     //lerpingPickup = true;
@@ -116,6 +117,7 @@ public class ObjectInteractions : MonoBehaviour {
 
         if (nextToPushable && !holdingPickup && !pushingObject)
         {
+            prompt.SetActive(true);
             if (Input.GetKeyDown(KeyCode.E) || Input.GetButtonDown("Interact"))
             {
                 transitioning = true;
@@ -142,6 +144,12 @@ public class ObjectInteractions : MonoBehaviour {
                 }
                 pushPoint = pushBoxController.pushPoints[nearestPoint];
             }
+        }
+        
+
+        if (!nextToPickup && !nextToPushable)
+        {
+            prompt.SetActive(false);
         }
 
         if (holdingPickup && !transitioning)

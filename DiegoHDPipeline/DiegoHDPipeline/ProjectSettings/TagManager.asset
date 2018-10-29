@@ -9,6 +9,7 @@ TagManager:
   - Pushable
   - EnergySource
   - PlayerBody
+  - Enemy
   layers:
   - Default
   - TransparentFX

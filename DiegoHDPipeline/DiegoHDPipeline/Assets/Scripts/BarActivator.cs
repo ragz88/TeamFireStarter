@@ -13,6 +13,7 @@ public class BarActivator : MonoBehaviour {
     public float endIntensity = 60;
     public float intensityChangeSpeed = 0.25f;
     public MovableObjects[] movingObjects;
+    public Transform lockPoint;
 
     bool isActive = false;
     float padIntensity = 1;
@@ -66,8 +67,9 @@ public class BarActivator : MonoBehaviour {
 
     void OnTriggerEnter(Collider hit)
     {
-        if (hit.tag == "EnergySource")
+        if (hit.tag == "EnergySource" && hit.GetComponent<LiftableObject>().beingCarried == false)
         {
+            hit.GetComponent<Rigidbody>().useGravity = false;
             for (int i = 0; i < bars.Length; i++)
             {
                 bars[i].Fill();
@@ -81,10 +83,30 @@ public class BarActivator : MonoBehaviour {
         
     }
 
+    private void OnTriggerStay(Collider hit)
+    {
+        if (hit.tag == "EnergySource" && hit.GetComponent<LiftableObject>().beingCarried == false)
+        {
+            if (Vector3.Distance(hit.transform.position, lockPoint.position) < 0.1f && Quaternion.Angle(hit.transform.rotation, transform.rotation) < 2f)
+            {
+                hit.transform.position = Vector3.Lerp(hit.transform.position, lockPoint.position, 2.5f * Time.deltaTime);
+                hit.transform.rotation = Quaternion.Slerp(hit.transform.rotation, transform.rotation, 2.5f * Time.deltaTime);
+            }
+            else
+            {
+                hit.GetComponent<Rigidbody>().useGravity = true;
+            }
+        }
+    }
+
     private void OnTriggerExit(Collider hit)
     {
         if (hit.tag == "EnergySource")
         {
+            if (hit.GetComponent<LiftableObject>().beingCarried == false)
+            {
+                hit.GetComponent<Rigidbody>().isKinematic = false;
+            }
             for (int i = 0; i < bars.Length; i++)
             {
                 bars[i].Empty();

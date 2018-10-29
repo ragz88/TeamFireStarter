@@ -5,6 +5,7 @@ using UnityEngine;
 public class LiftableObject : MonoBehaviour {
 
     public Vector3 initialPos;
+    public bool useStartingPos = true;
     //public Transform partAttractorTrans;
     public bool beingCarried = false;
     public ObjectInteractions Interactions;
@@ -18,7 +19,10 @@ public class LiftableObject : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        initialPos = transform.position;
+        if (useStartingPos)
+        {
+            initialPos = transform.position;
+        }
         anim = gameObject.GetComponent<Animator>();
         dissolveSound = gameObject.GetComponent<AudioSource>();
         //dissolveTime = 2 * (anim.);

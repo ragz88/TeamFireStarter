@@ -26,6 +26,13 @@ public class Golem: MonoBehaviour {
 
     EyeState eyeState = EyeState.Passive;
 
+    bool blockPresent = false;
+    bool isActive = false;
+    GameObject energySource;
+    LiftableObject energySourceLO;
+    public Transform energySourceFinPos;
+    public float sourceSpeed = 1;
+
     public GameObject PointHolder;
     public Transform[] patrolPoints;
     int currentPatrolPoint = 0;
@@ -82,9 +89,10 @@ public class Golem: MonoBehaviour {
     float initPitch;
     float initVolume;
 
-    //[HideInInspector]
-    //public LiftableObject energyCubeTarget;
+    
+    float[] initLightIntensity;
 
+    
 	// Use this for initialization
 	void Start () {
         agent = gameObject.GetComponent<NavMeshAgent>();
@@ -99,7 +107,7 @@ public class Golem: MonoBehaviour {
         initEyeRot = Eye.rotation.eulerAngles;
 
         PassiveEyeColours = new Color[eyeLights.Length];
-
+        
         for (int i = 0; i < eyeLights.Length; i++)
         {
             //print(eyeLights[i].color);
@@ -116,84 +124,107 @@ public class Golem: MonoBehaviour {
         initVolume = beeper.volume;
         //prevents the return pos in world space from moving around with the golem.
         returnPos.parent = null;
+
+        //ensures the scale of the energy source is correct by scaling the point it's parented to relative to the overal object's scale
+        energySourceFinPos.localScale = new Vector3(1/transform.localScale.x, 1 / transform.localScale.y, 1 / transform.localScale.z);
+
+        initLightIntensity = new float[eyeLights.Length];
+        for (int i = 0; i < eyeLights.Length; i++)
+        {
+            initLightIntensity[i] = eyeLights[i].intensity;
+        }
+
     }
 	
 	// Update is called once per frame
 	void Update () {
-        if (golState == golemState.Patrol)
+
+        
+        if (!blockPresent)
         {
-            timeSinceDrop = timeSinceDrop + Time.deltaTime;
-            if (beeper.isPlaying && beeper.clip == alarm)
-            {
-                if (beeper.volume > 0.05f)
-                {
-                    beeper.volume -= 0.03f;
-                }
-                else
-                {
-                    beeper.Stop();
-                    beeper.loop = false;
-                }
-            }
-            
-            if (Vector3.Distance(transform.position, patrolPoints[currentPatrolPoint].position) < 0.3f)
-            {
-                currentPatrolPoint = (currentPatrolPoint + 1) % patrolPoints.Length;
-
-                turning = true;
-                agent.speed = turnSpeed;
-                Invoke("stopTurning", 3f);
-                if (!beeper.isPlaying || (beeper.clip == alarm && beeper.isPlaying))
-                {
-                    beeper.clip = wallBeep;
-                    beeper.pitch = initPitch;
-                    beeper.volume = initVolume;
-                    beeper.Play();
-                }
-            }
-            agent.SetDestination(patrolPoints[currentPatrolPoint].position);
-
-            /*eyeRot = eyeRot + eyeSwaySpeed;
-            if (eyeRot > maxEyeSwayAngle)
-            {
-                eyeSwaySpeed = -1 * Mathf.Abs(eyeSwaySpeed); //use sine graph
-            }
-            else if (eyeRot < -maxEyeSwayAngle)
-            {
-                eyeSwaySpeed = Mathf.Abs(eyeSwaySpeed); //use sine graph
-            }*/
-            //Eye.localEulerAngles = new Vector3(initEyeRot.x, eyeRot, initEyeRot.z);
-
+            isActive = false;
         }
-        else if (golState == golemState.Chasing)
+
+        if (isActive)
         {
-            if (!beeper.isPlaying)
-            {
-                beeper.clip = alarm;
-                beeper.pitch = 1;
-                beeper.volume = alarmVolume;
-                beeper.Play();
-                beeper.loop = true;
-            }
-            //Eye.LookAt(diegoTarget.transform);
-            // = Eye.eulerAngles.y;
-            //Eye.localEulerAngles = new Vector3(0, eyeRot, 0);
 
-            if (eyeState == EyeState.Passive)
+            energySource.transform.position = Vector3.Lerp(energySource.transform.position, energySourceFinPos.position,
+                    sourceSpeed * Time.deltaTime);
+            energySource.transform.rotation = Quaternion.Slerp(energySource.transform.rotation, energySourceFinPos.rotation, 20 * Time.deltaTime);
+            if (golState == golemState.Patrol)
             {
-                eyeState = EyeState.LockedOn;
-                for (int i = 0; i < eyeLights.Length; i++)
+                timeSinceDrop = timeSinceDrop + Time.deltaTime;
+                if (beeper.isPlaying && beeper.clip == alarm)
                 {
-                    eyeLights[i].color = lockedOnEyeColours[i];
+                    if (beeper.volume > 0.05f)
+                    {
+                        beeper.volume -= 0.03f;
+                    }
+                    else
+                    {
+                        beeper.Stop();
+                        beeper.loop = false;
+                    }
                 }
-                rend.material = lockedOnEyeMat;
+
+                if (Vector3.Distance(transform.position, patrolPoints[currentPatrolPoint].position) < 0.3f)
+                {
+                    currentPatrolPoint = (currentPatrolPoint + 1) % patrolPoints.Length;
+
+                    turning = true;
+                    agent.speed = turnSpeed;
+                    Invoke("stopTurning", 3f);
+                    if (!beeper.isPlaying || (beeper.clip == alarm && beeper.isPlaying))
+                    {
+                        beeper.clip = wallBeep;
+                        beeper.pitch = initPitch;
+                        beeper.volume = initVolume;
+                        beeper.Play();
+                    }
+                }
+                agent.SetDestination(patrolPoints[currentPatrolPoint].position);
+
+                /*eyeRot = eyeRot + eyeSwaySpeed;
+                if (eyeRot > maxEyeSwayAngle)
+                {
+                    eyeSwaySpeed = -1 * Mathf.Abs(eyeSwaySpeed); //use sine graph
+                }
+                else if (eyeRot < -maxEyeSwayAngle)
+                {
+                    eyeSwaySpeed = Mathf.Abs(eyeSwaySpeed); //use sine graph
+                }*/
+                //Eye.localEulerAngles = new Vector3(initEyeRot.x, eyeRot, initEyeRot.z);
+
             }
+            else if (golState == golemState.Chasing)
+            {
+                if (!beeper.isPlaying)
+                {
+                    beeper.clip = alarm;
+                    beeper.pitch = 1;
+                    beeper.volume = alarmVolume;
+                    beeper.Play();
+                    beeper.loop = true;
+                }
+                //Eye.LookAt(diegoTarget.transform);
+                // = Eye.eulerAngles.y;
+                //Eye.localEulerAngles = new Vector3(0, eyeRot, 0);
 
-            agent.speed = chaseSpeed;
-            agent.angularSpeed = chaseAngularSpeed;
+                if (eyeState == EyeState.Passive)
+                {
+                    eyeState = EyeState.LockedOn;
+                    for (int i = 0; i < eyeLights.Length; i++)
+                    {
+                        eyeLights[i].color = lockedOnEyeColours[i];
+                    }
+                    rend.material = lockedOnEyeMat;
+                }
 
-            //if (Vector3.Distance(energyCubeTarget.transform.position, transform.position) < 15f)   //Change to hide out of sight
-            //{
+                agent.speed = chaseSpeed;
+                agent.angularSpeed = chaseAngularSpeed;
+
+                //if (Vector3.Distance(energyCubeTarget.transform.position, transform.position) < 15f)   //Change to hide out of sight
+                //{
                 if (Vector3.Distance(diegoTarget.transform.position, transform.position) < 2.85f)
                 {
                     golState = golemState.Lifting;
@@ -206,84 +237,127 @@ public class Golem: MonoBehaviour {
                 {
                     agent.SetDestination(diegoTarget.transform.position);
                 }
-            //}
-            //else
-            //{
-            //    seekState = seekerState.Destroying;
-            //}
+                //}
+                //else
+                //{
+                //    seekState = seekerState.Destroying;
+                //}
 
-        }
-        else if (golState == golemState.Lifting)
-        {
+            }
+            else if (golState == golemState.Lifting)
+            {
 
-            if (Vector3.Distance(diegoTarget.transform.position, liftPos.position) > 0.3f)
-            {
-                diegoTarget.transform.position = Vector3.Lerp(diegoTarget.transform.position, liftPos.position, liftSpeed * Time.deltaTime);
-            }
-            else
-            {
-                golState = golemState.Holding;
-            }
-
-        }
-        else if (golState == golemState.Holding)
-        {
-            agent.SetDestination(returnPos.position);
-            diegoTarget.transform.position = Vector3.Lerp(diegoTarget.transform.position, liftPos.position, 20f * Time.deltaTime);
-            if (Vector3.Distance(returnPos.position, transform.position) < stoppingDistRetPos)
-            {
-                golState = golemState.Dropping;
-                agent.SetDestination(transform.position);
-            }
-        }
-        else if (golState == golemState.Dropping)
-        {
-            agent.SetDestination(transform.position);
-            diegoTarget.transform.position = Vector3.Lerp(diegoTarget.transform.position, returnPos.position, liftSpeed * Time.deltaTime);
-            if (Vector3.Distance(returnPos.position, diegoTarget.transform.position) < 0.3f)
-            {
-                diegoTarget.GetComponent<Rigidbody>().isKinematic = false;
-                timeSinceDrop = 0;
-                golState = golemState.Returning;
-                diegoMoveBehav.lockMovement = false;
-            }
-        }
-        else if (golState == golemState.Returning)
-        {
-            timeSinceDrop = timeSinceDrop + Time.deltaTime;
-            agent.speed = stdSpeed;
-            agent.angularSpeed = stdAngularSpeed;
-            //Here we go back on patrol
-            if (eyeState == EyeState.LockedOn)
-            {
-                eyeState = EyeState.Passive;
-                for (int i = 0; i < eyeLights.Length; i++)
+                if (Vector3.Distance(diegoTarget.transform.position, liftPos.position) > 0.3f)
                 {
-                    eyeLights[i].color = PassiveEyeColours[i];
-                }
-                rend.material = passiveEyeMat;
-            }
-
-            if (beeper.isPlaying)
-            {
-                if (beeper.clip == alarm && beeper.volume > 0.05f)
-                {
-                    beeper.volume -= 0.03f;
+                    diegoTarget.transform.position = Vector3.Lerp(diegoTarget.transform.position, liftPos.position, liftSpeed * Time.deltaTime);
                 }
                 else
                 {
-                    beeper.Stop();
-                    beeper.loop = false;
+                    golState = golemState.Holding;
+                }
+
+            }
+            else if (golState == golemState.Holding)
+            {
+                agent.SetDestination(returnPos.position);
+                diegoTarget.transform.position = Vector3.Lerp(diegoTarget.transform.position, liftPos.position, 20f * Time.deltaTime);
+                if (Vector3.Distance(returnPos.position, transform.position) < stoppingDistRetPos)
+                {
+                    golState = golemState.Dropping;
+                    agent.SetDestination(transform.position);
+                }
+            }
+            else if (golState == golemState.Dropping)
+            {
+                agent.SetDestination(transform.position);
+                diegoTarget.transform.position = Vector3.Lerp(diegoTarget.transform.position, returnPos.position, liftSpeed * Time.deltaTime);
+                if (Vector3.Distance(returnPos.position, diegoTarget.transform.position) < 1.2f)
+                {
+                    diegoTarget.GetComponent<Rigidbody>().isKinematic = false;
+                    timeSinceDrop = 0;
+                    golState = golemState.Returning;
+                    diegoMoveBehav.lockMovement = false;
+                }
+            }
+            else if (golState == golemState.Returning)
+            {
+                timeSinceDrop = timeSinceDrop + Time.deltaTime;
+                agent.speed = stdSpeed;
+                agent.angularSpeed = stdAngularSpeed;
+                //Here we go back on patrol
+                if (eyeState == EyeState.LockedOn)
+                {
+                    eyeState = EyeState.Passive;
+                    for (int i = 0; i < eyeLights.Length; i++)
+                    {
+                        eyeLights[i].color = PassiveEyeColours[i];
+                    }
+                    rend.material = passiveEyeMat;
+                }
+
+                if (beeper.isPlaying)
+                {
+                    if (beeper.clip == alarm && beeper.volume > 0.05f)
+                    {
+                        beeper.volume -= 0.03f;
+                    }
+                    else
+                    {
+                        beeper.Stop();
+                        beeper.loop = false;
+                    }
+                }
+
+                if (Vector3.Distance(transform.position, initPatrolPos) < 0.2f)
+                {
+                    golState = golemState.Patrol;
+                }
+                else
+                {
+                    agent.SetDestination(initPatrolPos);
                 }
             }
 
-            if (Vector3.Distance(transform.position, initPatrolPos) < 0.2f)
+        }
+        else
+        {
+            agent.SetDestination(transform.position);
+            if (blockPresent)
             {
-                golState = golemState.Patrol;
+                energySource.transform.position = Vector3.Lerp(energySource.transform.position, energySourceFinPos.position,
+                    sourceSpeed * Time.deltaTime);
+                energySource.transform.rotation = Quaternion.Slerp(energySource.transform.rotation, energySourceFinPos.rotation, 20 * Time.deltaTime);
+                if (Vector3.Distance(energySource.transform.position, energySourceFinPos.position) < 0.03f)
+                {
+                    energySource.transform.parent = energySourceFinPos;
+                    isActive = true;
+                }
+
+                for (int i = 0; i < eyeLights.Length; i++)
+                {
+                    if (eyeLights[i].intensity < initLightIntensity[i])
+                    {
+                        eyeLights[i].intensity += Time.deltaTime*30;
+                    }
+                }
+                if (rend.fillAmount < 1)
+                {
+                    rend.fillAmount += Time.deltaTime;
+                }
             }
             else
             {
-                agent.SetDestination(initPatrolPos);
+                for (int i = 0; i < eyeLights.Length; i++)
+                {
+                    if (eyeLights[i].intensity > 0)
+                    {
+                        eyeLights[i].intensity -= Time.deltaTime*30;
+                    }
+                }
+                if (rend.fillAmount > 0)
+                {
+                    rend.fillAmount -= Time.deltaTime;
+                }
             }
         }
 	}
@@ -293,6 +367,35 @@ public class Golem: MonoBehaviour {
         agent.speed = stdSpeed;
     }
 
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.gameObject.tag == "EnergySource" && blockPresent == false)
+        {
+            energySourceLO = other.gameObject.GetComponent<LiftableObject>();
+            if (energySourceLO.beingCarried == false)
+            {
+                energySource = other.gameObject;
+                blockPresent = true;
+                energySource.GetComponent<Rigidbody>().isKinematic = true;
+            }
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.tag == "EnergySource")
+        {
+            if (energySource != null)
+            {
+                energySource.transform.parent = null;
+                energySource.GetComponent<Rigidbody>().isKinematic = false;
+                energySource = null;
+            }
+            
+            blockPresent = false;
+        }
+    }
+
     /*void stopDestroying()
     {
         golState = golemState.Returning;
@@ -300,5 +403,5 @@ public class Golem: MonoBehaviour {
         destroyingObject = false;
     }*/
 
-    
+
 }
