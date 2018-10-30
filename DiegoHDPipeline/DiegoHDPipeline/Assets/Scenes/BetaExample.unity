@@ -3547,6 +3547,9 @@ MonoBehaviour:
   returnOnInactive: 0
   movementSpeed: 0.1
   stoppingDistance: 0.05
+  slowInSpeed: 3
+  slowOutSpeed: 4
+  slowInSlowOut: 1
   activatingBars:
   - {fileID: 1039439568}
   optionalReturnPos: {fileID: 0}
@@ -9243,7 +9246,10 @@ MonoBehaviour:
   isActive: 0
   returnOnInactive: 1
   movementSpeed: 2
-  stoppingDistance: 1.5
+  stoppingDistance: 0.5
+  slowInSpeed: 3
+  slowOutSpeed: 4
+  slowInSlowOut: 1
   activatingBars:
   - {fileID: 817068400}
   optionalReturnPos: {fileID: 44619528}
@@ -16743,7 +16749,10 @@ MonoBehaviour:
   isActive: 0
   returnOnInactive: 1
   movementSpeed: 2
-  stoppingDistance: 1.5
+  stoppingDistance: 0.5
+  slowInSpeed: 3
+  slowOutSpeed: 4
+  slowInSlowOut: 1
   activatingBars:
   - {fileID: 1104791714}
   optionalReturnPos: {fileID: 0}
@@ -17769,6 +17778,11 @@ Prefab:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 95018632037808806, guid: 4cba3108d876e6441a5531c200e2a241,
+        type: 2}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4cba3108d876e6441a5531c200e2a241, type: 2}
   m_IsPrefabAsset: 0
@@ -18136,7 +18150,10 @@ MonoBehaviour:
   isActive: 0
   returnOnInactive: 1
   movementSpeed: 2
-  stoppingDistance: 1.5
+  stoppingDistance: 0.5
+  slowInSpeed: 3
+  slowOutSpeed: 4
+  slowInSlowOut: 1
   activatingBars:
   - {fileID: 1099067693}
   optionalReturnPos: {fileID: 473531881}
@@ -23190,7 +23207,10 @@ MonoBehaviour:
   isActive: 0
   returnOnInactive: 1
   movementSpeed: 2
-  stoppingDistance: 1.5
+  stoppingDistance: 0.5
+  slowInSpeed: 3
+  slowOutSpeed: 4
+  slowInSlowOut: 1
   activatingBars:
   - {fileID: 950358937}
   optionalReturnPos: {fileID: 1904133475}
@@ -25866,6 +25886,9 @@ MonoBehaviour:
   returnOnInactive: 0
   movementSpeed: 0.1
   stoppingDistance: 0.05
+  slowInSpeed: 3
+  slowOutSpeed: 4
+  slowInSlowOut: 1
   activatingBars:
   - {fileID: 1039439568}
   optionalReturnPos: {fileID: 0}
