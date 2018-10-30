@@ -29,6 +29,8 @@ public class ObjectInteractions : MonoBehaviour {
     public GameObject objectToLift;
     public GameObject objectToPush;
 
+    public GameObject optionalCam;
+
     public LayerMask rayMask;
 
     public MoveBehaviour characterControl;
@@ -36,7 +38,7 @@ public class ObjectInteractions : MonoBehaviour {
 
     //Text promptText;
 
-    PushableObject pushBoxController;
+    PushableObject pushBoxController = null;
     Transform pushPoint;
     //bool lockMovement = false;
 
@@ -51,39 +53,64 @@ public class ObjectInteractions : MonoBehaviour {
 	void Update () {
 
         //PushableObject pushScript;
-        LiftableObject liftScript;
+        LiftableObject liftScript = null;
+        pushBoxController = null;
 
+        if (characterControl.lockMovement == true)
+        {
+            dropObject();
+        }
+
+
+        //Raycasting (4 directions) ----------------------------
         RaycastHit rayHit;
-        if (Physics.Raycast(transform.position + new Vector3(0, 1, 0), transform.forward + new Vector3(0, -0.5f, 0), out rayHit, 0.75f, rayMask))
+        if (Physics.Raycast(transform.position + new Vector3(0, 1, 0), transform.forward + new Vector3(0, -0.5f, 0), out rayHit, 1.2f, rayMask))
         {
             pushBoxController = rayHit.collider.gameObject.GetComponent<PushableObject>();
             liftScript = rayHit.collider.gameObject.GetComponent<LiftableObject>();
+        }
 
-            if (liftScript != null)
-            {
-                objectToLift = rayHit.collider.gameObject;
-                nextToPickup = true;
-            }
-            else
-            {
-                if (!holdingPickup)
-                {
-                    objectToLift = null;
-                }
+        if ( (pushBoxController == null && liftScript == null) &&
+            Physics.Raycast(transform.position + new Vector3(0, 1, 0) + 0.25f * transform.right, transform.forward + new Vector3(0, -0.5f, 0) + 1.5f*transform.right, out rayHit, 1.2f, rayMask))
+        {
+            pushBoxController = rayHit.collider.gameObject.GetComponent<PushableObject>();
+            liftScript = rayHit.collider.gameObject.GetComponent<LiftableObject>();
+        }
 
-                if (pushBoxController != null)
-                {
-                    objectToPush = rayHit.collider.gameObject;
-                    nextToPushable = true;
-                }
-                else
-                {
-                    if (!pushingObject)
-                    {
-                        objectToPush = null;
-                    }
-                }
+        if ((pushBoxController == null && liftScript == null) &&
+            Physics.Raycast(transform.position + new Vector3(0, 1, 0) - 0.25f * transform.right, transform.forward + new Vector3(0, -0.5f, 0) - 1.5f*transform.right, out rayHit, 1.2f, rayMask))
+        {
+            pushBoxController = rayHit.collider.gameObject.GetComponent<PushableObject>();
+            liftScript = rayHit.collider.gameObject.GetComponent<LiftableObject>();
+        }
+
+        if (optionalCam != null)
+        {
+            if ((pushBoxController == null && liftScript == null) &&
+                Physics.Raycast(optionalCam.transform.position, optionalCam.transform.forward, out rayHit, (Vector3.Distance(transform.position, optionalCam.transform.position) + 1.2f), rayMask))
+            {
+                pushBoxController = rayHit.collider.gameObject.GetComponent<PushableObject>();
+                liftScript = rayHit.collider.gameObject.GetComponent<LiftableObject>();
             }
+        }
+
+        Debug.DrawRay(transform.position + new Vector3(0, 1, 0) + 0.25f * transform.right, (transform.forward + new Vector3(0, -0.5f, 0) + 1.5f * transform.right).normalized * 1.2f, Color.magenta);
+        Debug.DrawRay(transform.position + new Vector3(0, 1, 0) - 0.25f * transform.right, (transform.forward + new Vector3(0, -0.5f, 0) - 1.5f * transform.right).normalized * 1.2f, Color.magenta);
+        if (optionalCam != null)
+        {
+            Debug.DrawRay(optionalCam.transform.position, (optionalCam.transform.forward).normalized * (Vector3.Distance(transform.position, optionalCam.transform.position) + 1.2f), Color.green);
+        }
+        Debug.DrawRay(transform.position + new Vector3(0, 1, 0), (transform.forward + new Vector3(0, -0.5f, 0)).normalized * 1.2f, Color.magenta);
+
+
+        //-------------------------------------------------------
+
+
+        //Raycast resolution ----------------------
+        if (liftScript != null && characterControl.lockMovement != true)
+        {
+            objectToLift = rayHit.collider.gameObject;
+            nextToPickup = true;
         }
         else
         {
@@ -92,14 +119,25 @@ public class ObjectInteractions : MonoBehaviour {
                 objectToLift = null;
             }
             nextToPickup = false;
-            if (!pushingObject)
-            {
-                objectToPush = null;
-            }
-            nextToPushable = false;
-        }
-        Debug.DrawRay(transform.position + new Vector3(0, 1, 0), (transform.forward + new Vector3(0, -0.5f, 0)).normalized*0.75f, Color.magenta);
 
+            if (pushBoxController != null)
+            {
+                objectToPush = rayHit.collider.gameObject;
+                nextToPushable = true;
+            }
+            else
+            {
+                if (!pushingObject)
+                {
+                    objectToPush = null;
+                }
+                nextToPushable = false;
+            }
+        }
+        //-----------------------------------------
+
+
+        
 
         if (objectToLift != null)
         {
@@ -169,9 +207,7 @@ public class ObjectInteractions : MonoBehaviour {
             if (Input.GetKeyDown(KeyCode.E) || Input.GetButtonDown("Interact"))
             {
                 pushingObject = false;
-                //objectToPush.transform.parent = null;
                 characterControl.pushing = false;
-                //character.pushingObject = false;
                 characterControl.lockMovement = false;
 
                 objectToPush.GetComponent<Rigidbody>().mass = 100000;
@@ -194,7 +230,7 @@ public class ObjectInteractions : MonoBehaviour {
                     {
                         characterControl.lockMovement = false;
                         transform.LookAt(new Vector3(objectToPush.transform.position.x, transform.position.y, objectToPush.transform.position.z));
-                        //objectToPush.transform.parent = transform.parent;
+                        
                     }
                     else
                     {
@@ -204,9 +240,7 @@ public class ObjectInteractions : MonoBehaviour {
                             pushingObject = false;
                             characterControl.pushing = false;
                             characterControl.lockMovement = false;
-                            //print(Vector3.Distance(pushPos.position, new Vector3(pushPoint.position.x, pushPos.position.y, pushPoint.position.z)));
                             
-
                             objectToPush.GetComponent<Rigidbody>().mass = 100000;
                         }
                     }

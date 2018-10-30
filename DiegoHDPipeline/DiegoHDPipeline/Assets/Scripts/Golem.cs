@@ -77,6 +77,12 @@ public class Golem: MonoBehaviour {
     [HideInInspector]
     public float timeSinceDrop = 2;
 
+
+    public GameObject cage;
+    public float finalCageScale = 2;
+    public float cageSpeed = 2;
+    float initCageScale;
+
     //public float DestroyDelay = 1f;
 
     //ObjectInteractions myObjectHandler;
@@ -134,6 +140,8 @@ public class Golem: MonoBehaviour {
             initLightIntensity[i] = eyeLights[i].intensity;
         }
 
+        initCageScale = cage.transform.localScale.x;
+
     }
 	
 	// Update is called once per frame
@@ -153,6 +161,15 @@ public class Golem: MonoBehaviour {
             energySource.transform.rotation = Quaternion.Slerp(energySource.transform.rotation, energySourceFinPos.rotation, 20 * Time.deltaTime);
             if (golState == golemState.Patrol)
             {
+                if (Vector3.Distance(cage.transform.position, Eye.transform.position) < 0.2f)
+                {
+                    cage.SetActive(false);
+                }
+                else
+                {
+                    cage.transform.position = Vector3.Lerp(cage.transform.position, Eye.transform.position, cageSpeed * Time.deltaTime * 5);
+                }
+
                 timeSinceDrop = timeSinceDrop + Time.deltaTime;
                 if (beeper.isPlaying && beeper.clip == alarm)
                 {
@@ -198,6 +215,15 @@ public class Golem: MonoBehaviour {
             }
             else if (golState == golemState.Chasing)
             {
+                if (Vector3.Distance(cage.transform.position, Eye.transform.position) < 0.2f)
+                {
+                    cage.SetActive(false);
+                }
+                else
+                {
+                    cage.transform.position = Vector3.Lerp(cage.transform.position, Eye.transform.position, cageSpeed * Time.deltaTime * 5);
+                }
+
                 if (!beeper.isPlaying)
                 {
                     beeper.clip = alarm;
@@ -247,6 +273,14 @@ public class Golem: MonoBehaviour {
             }
             else if (golState == golemState.Lifting)
             {
+                //show our cage, move it and expand it
+                cage.SetActive(true);
+                if (cage.transform.localScale.x < finalCageScale)
+                {
+                    cage.transform.localScale = cage.transform.localScale * (1 + (cageSpeed*2*Time.deltaTime));
+                }
+                cage.transform.position = Vector3.Lerp(cage.transform.position, diegoTarget.transform.position + new Vector3(0,1,0), cageSpeed * Time.deltaTime);
+
 
                 if (Vector3.Distance(diegoTarget.transform.position, liftPos.position) > 0.3f)
                 {
@@ -260,6 +294,8 @@ public class Golem: MonoBehaviour {
             }
             else if (golState == golemState.Holding)
             {
+                cage.transform.position = Vector3.Lerp(cage.transform.position, diegoTarget.transform.position + new Vector3(0, 1, 0), cageSpeed * Time.deltaTime * 5);
+
                 agent.SetDestination(returnPos.position);
                 diegoTarget.transform.position = Vector3.Lerp(diegoTarget.transform.position, liftPos.position, 20f * Time.deltaTime);
                 if (Vector3.Distance(returnPos.position, transform.position) < stoppingDistRetPos)
@@ -270,6 +306,8 @@ public class Golem: MonoBehaviour {
             }
             else if (golState == golemState.Dropping)
             {
+                cage.transform.position = Vector3.Lerp(cage.transform.position, diegoTarget.transform.position + new Vector3(0, 1, 0), cageSpeed * Time.deltaTime * 5);
+
                 agent.SetDestination(transform.position);
                 diegoTarget.transform.position = Vector3.Lerp(diegoTarget.transform.position, returnPos.position, liftSpeed * Time.deltaTime);
                 if (Vector3.Distance(returnPos.position, diegoTarget.transform.position) < 0.5f)
@@ -284,6 +322,19 @@ public class Golem: MonoBehaviour {
             }
             else if (golState == golemState.Returning)
             {
+                if (cage.transform.localScale.x > initCageScale)
+                {
+                    cage.transform.localScale = cage.transform.localScale * (1 - (cageSpeed * 2 * Time.deltaTime));
+                }
+                if (Vector3.Distance(cage.transform.position, Eye.transform.position) < 0.2f && cage.transform.localScale.x <= initCageScale)
+                {
+                    cage.SetActive(false);
+                }
+                else
+                {
+                    cage.transform.position = Vector3.Lerp(cage.transform.position, Eye.transform.position, cageSpeed * Time.deltaTime * 5);
+                }
+
                 timeSinceDrop = timeSinceDrop + Time.deltaTime;
                 agent.speed = stdSpeed;
                 agent.angularSpeed = stdAngularSpeed;
@@ -324,6 +375,31 @@ public class Golem: MonoBehaviour {
         }
         else
         {
+            if (beeper.isPlaying && beeper.clip == alarm)
+            {
+                if (beeper.volume > 0.05f)
+                {
+                    beeper.volume -= 0.03f;
+                }
+                else
+                {
+                    beeper.Stop();
+                    beeper.loop = false;
+                }
+            }
+
+            if (eyeState == EyeState.LockedOn)
+            {
+                eyeState = EyeState.Passive;
+                for (int i = 0; i < eyeLights.Length; i++)
+                {
+                    eyeLights[i].color = PassiveEyeColours[i];
+                }
+                rend.material = passiveEyeMat;
+            }
+
+            golState = golemState.Patrol;
+
             agent.SetDestination(transform.position);
             if (blockPresent)
             {
