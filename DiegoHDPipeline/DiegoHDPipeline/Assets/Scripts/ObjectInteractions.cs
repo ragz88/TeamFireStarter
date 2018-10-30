@@ -16,6 +16,7 @@ public class ObjectInteractions : MonoBehaviour {
 
     bool nextToPickup = false;
     bool nextToPushable = false;
+    bool nextToEnvPushable = false;
     public bool holdingPickup = false;
     public bool pushingObject = false;
 
@@ -54,9 +55,10 @@ public class ObjectInteractions : MonoBehaviour {
 
         //PushableObject pushScript;
         LiftableObject liftScript = null;
+        EnvironmentalPushable envPushable = null;
         pushBoxController = null;
 
-        if (characterControl.lockMovement == true)
+        if (characterControl != null && characterControl.lockMovement == true)
         {
             dropObject();
         }
@@ -68,29 +70,33 @@ public class ObjectInteractions : MonoBehaviour {
         {
             pushBoxController = rayHit.collider.gameObject.GetComponent<PushableObject>();
             liftScript = rayHit.collider.gameObject.GetComponent<LiftableObject>();
+            envPushable = rayHit.collider.gameObject.GetComponent<EnvironmentalPushable>();
         }
 
-        if ( (pushBoxController == null && liftScript == null) &&
+        if ( (pushBoxController == null && liftScript == null && envPushable == null) &&
             Physics.Raycast(transform.position + new Vector3(0, 1, 0) + 0.25f * transform.right, transform.forward + new Vector3(0, -0.5f, 0) + 1.5f*transform.right, out rayHit, 1.2f, rayMask))
         {
             pushBoxController = rayHit.collider.gameObject.GetComponent<PushableObject>();
             liftScript = rayHit.collider.gameObject.GetComponent<LiftableObject>();
+            envPushable = rayHit.collider.gameObject.GetComponent<EnvironmentalPushable>();
         }
 
-        if ((pushBoxController == null && liftScript == null) &&
+        if ((pushBoxController == null && liftScript == null && envPushable == null) &&
             Physics.Raycast(transform.position + new Vector3(0, 1, 0) - 0.25f * transform.right, transform.forward + new Vector3(0, -0.5f, 0) - 1.5f*transform.right, out rayHit, 1.2f, rayMask))
         {
             pushBoxController = rayHit.collider.gameObject.GetComponent<PushableObject>();
             liftScript = rayHit.collider.gameObject.GetComponent<LiftableObject>();
+            envPushable = rayHit.collider.gameObject.GetComponent<EnvironmentalPushable>();
         }
 
         if (optionalCam != null)
         {
-            if ((pushBoxController == null && liftScript == null) &&
-                Physics.Raycast(optionalCam.transform.position, optionalCam.transform.forward, out rayHit, (Vector3.Distance(transform.position, optionalCam.transform.position) + 1.2f), rayMask))
+            if ((pushBoxController == null && liftScript == null && envPushable == null) &&
+                Physics.Raycast(optionalCam.transform.position, optionalCam.transform.forward, out rayHit, (Vector3.Distance(transform.position, optionalCam.transform.position) + 1.3f), rayMask))
             {
                 pushBoxController = rayHit.collider.gameObject.GetComponent<PushableObject>();
                 liftScript = rayHit.collider.gameObject.GetComponent<LiftableObject>();
+                envPushable = rayHit.collider.gameObject.GetComponent<EnvironmentalPushable>();
             }
         }
 
@@ -109,7 +115,7 @@ public class ObjectInteractions : MonoBehaviour {
         //Raycast resolution ----------------------
         if (liftScript != null && characterControl.lockMovement != true)
         {
-            objectToLift = rayHit.collider.gameObject;
+            objectToLift = liftScript.gameObject;
             nextToPickup = true;
         }
         else
@@ -122,7 +128,7 @@ public class ObjectInteractions : MonoBehaviour {
 
             if (pushBoxController != null)
             {
-                objectToPush = rayHit.collider.gameObject;
+                objectToPush = pushBoxController.gameObject;
                 nextToPushable = true;
             }
             else
@@ -132,6 +138,15 @@ public class ObjectInteractions : MonoBehaviour {
                     objectToPush = null;
                 }
                 nextToPushable = false;
+
+                if (envPushable != null)
+                {
+                    nextToEnvPushable = true;
+                }
+                else
+                {
+                    nextToEnvPushable = false;
+                }
             }
         }
         //-----------------------------------------
@@ -147,7 +162,7 @@ public class ObjectInteractions : MonoBehaviour {
                 if (Input.GetKeyDown(KeyCode.E) || Input.GetButtonDown("Interact"))
                 {
                     //lerpingPickup = true;
-
+                    objectToLift.GetComponent<LiftableObject>().beingCarried = true;
                     LiftObject();
                 }
             }
@@ -183,9 +198,23 @@ public class ObjectInteractions : MonoBehaviour {
                 pushPoint = pushBoxController.pushPoints[nearestPoint];
             }
         }
-        
 
-        if (!nextToPickup && !nextToPushable)
+
+        if (nextToEnvPushable && !holdingPickup && !pushingObject)
+        {
+            if (envPushable.animPlayed == false)
+            {
+                prompt.SetActive(true);
+                if (Input.GetKeyDown(KeyCode.E) || Input.GetButtonDown("Interact"))
+                {
+                    envPushable.PlayAnim();
+                    prompt.SetActive(false);
+                }
+            }
+
+        }
+
+        if ((!nextToPickup && !nextToPushable && !nextToEnvPushable) || holdingPickup || pushingObject)
         {
             prompt.SetActive(false);
         }

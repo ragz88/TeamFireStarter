@@ -121,7 +121,7 @@ public class CleanerEnemy2_0 : MonoBehaviour
                         {
                             //pick up block here
                             source = rayHit.collider.gameObject.GetComponent<LiftableObject>();
-                            if (Vector3.Distance(source.initialPos, source.transform.position) > 3)
+                            if (Vector3.Distance(source.initialPos, source.transform.position) > 3 && !source.beingCarried)
                             {
                                 beeper.clip = barBeep;
                                 beeper.Play();
@@ -168,7 +168,7 @@ public class CleanerEnemy2_0 : MonoBehaviour
                         {
                             //pick up block here
                             source = rayHit.collider.gameObject.GetComponent<LiftableObject>();
-                            if (Vector3.Distance(source.initialPos, source.transform.position) > 3)
+                            if (Vector3.Distance(source.initialPos, source.transform.position) > 3 && !source.beingCarried)
                             {
                                 beeper.clip = barBeep;
                                 beeper.Play();
@@ -229,7 +229,7 @@ public class CleanerEnemy2_0 : MonoBehaviour
                         {
                             //pick up block here
                             source = rayHit.collider.gameObject.GetComponent<LiftableObject>();
-                            if (Vector3.Distance(source.initialPos, source.transform.position) > 3)
+                            if (Vector3.Distance(source.initialPos, source.transform.position) > 3 && !source.beingCarried)
                             {
                                 beeper.clip = barBeep;
                                 beeper.Play();

@@ -448,7 +448,7 @@ public class Golem: MonoBehaviour {
 
     private void OnTriggerStay(Collider other)
     {
-        if (other.gameObject.tag == "EnergySource" && blockPresent == false)
+        if (other.gameObject.tag == "EnergySource" && blockPresent == false && !isActive)
         {
             energySourceLO = other.gameObject.GetComponent<LiftableObject>();
             if (energySourceLO.beingCarried == false)

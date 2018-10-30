@@ -270,7 +270,6 @@ GameObject:
   - component: {fileID: 136850392040728328}
   - component: {fileID: 114682878115356282}
   - component: {fileID: 195221549602772500}
-  - component: {fileID: 114097088677043688}
   - component: {fileID: 82103847388637740}
   - component: {fileID: 65361736591277562}
   m_Layer: 15
@@ -374,7 +373,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1316960123443002}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.038, y: 0.378, z: -0.288}
+  m_LocalPosition: {x: -0.038, y: 0.378, z: -0.323}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_Children: []
   m_Father: {fileID: 4508294121511538}
@@ -772,8 +771,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.51, y: 0.5, z: 0.68}
-  m_Center: {x: -0.03, y: 0.39, z: -0.42}
+  m_Size: {x: 0.51, y: 0.5, z: 0.38}
+  m_Center: {x: -0.03, y: 0.39, z: -0.36}
 --- !u!82 &82103847388637740
 AudioSource:
   m_ObjectHideFlags: 1
@@ -970,32 +969,6 @@ Light:
   m_UseColorTemperature: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
---- !u!114 &114097088677043688
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1836963124617088}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0d5307a7a1b82a3478d2bbca4d36fd05, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  enemy: 1
-  prompt: {fileID: 0}
-  liftPos: {fileID: 0}
-  pushPos: {fileID: 0}
-  liftSpeed: 0.1
-  holdingPickup: 0
-  pushingObject: 0
-  lerpingPickup: 0
-  objectToLift: {fileID: 0}
-  objectToPush: {fileID: 0}
-  optionalCam: {fileID: 0}
-  rayMask:
-    serializedVersion: 2
-    m_Bits: 0
-  characterControl: {fileID: 0}
 --- !u!114 &114364453574574660
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1131,7 +1104,7 @@ MonoBehaviour:
   golem: {fileID: 114682878115356282}
   sightMask:
     serializedVersion: 2
-    m_Bits: 64823
+    m_Bits: 63505
 --- !u!114 &114581539907898206
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1250,7 +1223,7 @@ MonoBehaviour:
   timeSinceDrop: 2
   cage: {fileID: 1467996809409412}
   finalCageScale: 2
-  cageSpeed: 2
+  cageSpeed: 4
   alarm: {fileID: 8300000, guid: 978b1d453e64a1e4588070a47cc7a0a8, type: 3}
   wallBeep: {fileID: 8300000, guid: c836834aec6f3ba48b7e6ae38e9170d1, type: 3}
   alarmVolume: 0.5

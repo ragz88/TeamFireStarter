@@ -6,7 +6,9 @@ public class EnvironmentalPushable : MonoBehaviour {
 
     Animator anim;
 
-    bool animPlayed = false;
+    [HideInInspector]
+    public bool animPlayed = false;
+    public GameObject[] objectsToActivate;
 
 	// Use this for initialization
 	void Start () {
@@ -25,15 +27,26 @@ public class EnvironmentalPushable : MonoBehaviour {
         {
             if ((Input.GetKeyDown(KeyCode.E) || Input.GetButtonDown("Interact")) && !animPlayed)
             {
-                animPlayed = true;
-                anim.SetBool("playAnim", true);
-                //anim.StartPlayback();
+                PlayAnim();
             }
         }
         else if (other.gameObject.tag == "Pushable")
         {
+            PlayAnim();
+        }
+    }
+
+    public void PlayAnim()
+    {
+        if (!animPlayed)
+        {
             animPlayed = true;
             anim.SetBool("playAnim", true);
+            for (int i = 0; i < objectsToActivate.Length; i++)
+            {
+                objectsToActivate[i].SetActive(true);
+            }
+            Destroy(this);
         }
     }
 }

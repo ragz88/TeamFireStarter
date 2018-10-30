@@ -1744,6 +1744,7 @@ MonoBehaviour:
   lerpingPickup: 0
   objectToLift: {fileID: 0}
   objectToPush: {fileID: 0}
+  optionalCam: {fileID: 0}
   rayMask:
     serializedVersion: 2
     m_Bits: 0

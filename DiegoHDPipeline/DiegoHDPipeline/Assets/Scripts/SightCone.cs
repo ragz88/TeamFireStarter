@@ -77,7 +77,6 @@ public class SightCone : MonoBehaviour {
         if ((seeker != null && (seeker.seekState == Seeker.seekerState.Patrol || seeker.seekState == Seeker.seekerState.Returning) && other.gameObject.tag == "PlayerBody") ||
            (golem != null && ((golem.golState == Golem.golemState.Patrol || golem.golState == Golem.golemState.Returning) && golem.timeSinceDrop > 1.5f) && other.gameObject.tag == "PlayerBody")   )
         {
-            
             for (int i = 0; i < sightPoints.Length; i++)
             {
                 RaycastHit rayHit;
@@ -87,20 +86,19 @@ public class SightCone : MonoBehaviour {
                     if (rayHit.collider.gameObject.tag == "PlayerBody")
                     {
                         //objInteraction = rayHit.collider.gameObject.GetComponentInChildren<ObjectInteractions>();
-                        if (objInteraction.holdingPickup == true)
+                        if (objInteraction.holdingPickup == true && seeker != null)
                         {
-                            if (seeker != null)
-                            {
-                                seeker.seekState = Seeker.seekerState.Chasing;
-                                seeker.energyCubeTarget = objInteraction.objectToLift.GetComponent<LiftableObject>();
-                                seeker.initPatrolPos = seeker.transform.position;
-                            }
+                             seeker.seekState = Seeker.seekerState.Chasing;
+                             seeker.energyCubeTarget = objInteraction.objectToLift.GetComponent<LiftableObject>();
+                             seeker.initPatrolPos = seeker.transform.position;
+ 
                         }
                         else if (golem != null)
                         {
                             golem.golState = Golem.golemState.Chasing;
                             golem.diegoTarget = rayHit.collider.gameObject;
                             golem.initPatrolPos = golem.transform.position;
+                            break;
                         }
                         else
                         {
