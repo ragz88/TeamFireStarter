@@ -11,6 +11,9 @@ public class MovableObjects : MonoBehaviour {
     public bool returnOnInactive = false;
     public float movementSpeed = 0.1f;
     public float stoppingDistance = 0.05f;
+    public float slowInSpeed = 3;
+    public float slowOutSpeed = 4;
+    public bool slowInSlowOut = true;
 
     public LoadingBar[] activatingBars;
 
@@ -20,10 +23,12 @@ public class MovableObjects : MonoBehaviour {
     Vector3 initPos;
     bool completedMovement = false;
     float initMoveSpeed;
+    Vector3 lastPos;
 
 
 	// Use this for initialization
 	void Start () {
+        lastPos = transform.position;
         initMoveSpeed = movementSpeed;
         initPos = transform.position;
         //movementSpeed = movementSpeed * 0.01f;
@@ -62,10 +67,39 @@ public class MovableObjects : MonoBehaviour {
 
         if (isActive && !completedMovement)
         {
+            //slow in Slow out code
+            if (slowInSlowOut)
+            {
+                if (Vector3.Distance(lastPos, transform.position) < Vector3.Distance(movePoints[destinationNum], transform.position))
+                {
+                    if (movementSpeed < Vector3.Distance(lastPos, transform.position))
+                    {
+                        movementSpeed += (Time.deltaTime * slowOutSpeed);
+                        if (movementSpeed > initMoveSpeed)
+                        {
+                            movementSpeed = initMoveSpeed;
+                        }
+                    }
+                }
+                else
+                {
+                    if (movementSpeed > Vector3.Distance(movePoints[destinationNum], transform.position))
+                    {
+                        movementSpeed -= (Time.deltaTime * slowInSpeed);
+                        if (movementSpeed <= 0)
+                        {
+                            movementSpeed = Time.deltaTime * slowInSpeed;
+                        }
+                    }
+                }
+            }
+
+
             //transform.position = Vector3.Lerp(transform.position, movePoints[destinationNum],(movementSpeed * Time.deltaTime));
             transform.position = Vector3.MoveTowards(transform.position, movePoints[destinationNum], (movementSpeed * Time.deltaTime));
             if (Vector3.Distance(transform.position, movePoints[destinationNum]) < stoppingDistance)
             {
+                lastPos = movePoints[destinationNum];
                 destinationNum++;
                 if (destinationNum > movePoints.Length - 1)
                 {

@@ -230,6 +230,7 @@ public class Golem: MonoBehaviour {
                     golState = golemState.Lifting;
                     diegoMoveBehav = diegoTarget.GetComponent<MoveBehaviour>();
                     diegoMoveBehav.lockMovement = true;
+                    diegoTarget.GetComponent<Animator>().enabled = false ;
                     agent.SetDestination(transform.position);
                     diegoTarget.GetComponent<Rigidbody>().isKinematic = true;
                 }
@@ -271,12 +272,14 @@ public class Golem: MonoBehaviour {
             {
                 agent.SetDestination(transform.position);
                 diegoTarget.transform.position = Vector3.Lerp(diegoTarget.transform.position, returnPos.position, liftSpeed * Time.deltaTime);
-                if (Vector3.Distance(returnPos.position, diegoTarget.transform.position) < 1.2f)
+                if (Vector3.Distance(returnPos.position, diegoTarget.transform.position) < 0.5f)
                 {
                     diegoTarget.GetComponent<Rigidbody>().isKinematic = false;
                     timeSinceDrop = 0;
                     golState = golemState.Returning;
                     diegoMoveBehav.lockMovement = false;
+                    diegoTarget.GetComponent<Animator>().enabled = true;
+
                 }
             }
             else if (golState == golemState.Returning)
