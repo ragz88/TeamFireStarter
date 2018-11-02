@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Scenes/BetaExample.unity
+- path: Assets/Scenes/Level1_BetaLayout.unity
   isLoaded: 1
   isActive: 1

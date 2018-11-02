@@ -8,7 +8,19 @@ EditorBuildSettings:
   - enabled: 0
     path: 
     guid: 00000000000000000000000000000000
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/AlphaScene.unity
     guid: 16194cb29d846e04684d8e94f23a80fb
+  - enabled: 1
+    path: Assets/Scenes/BetaExample.unity
+    guid: 73a5e13e9acb8a24e8feed96cc9da25f
+  - enabled: 1
+    path: Assets/Scenes/Level1_BetaLayout.unity
+    guid: 145847a4fee866e4fbf4fcf91e459a5b
+  - enabled: 1
+    path: Assets/Scenes/Level2_BetaLayout 1.unity
+    guid: 8db9ab38b868d5e4da950d18ff41b779
+  - enabled: 1
+    path: Assets/Scenes/Level3_BetaLayout 2.unity
+    guid: fb4f5be371fd9914d91c6f2f3db1d1dd
   m_configObjects: {}

@@ -30,7 +30,7 @@ public class GameController : MonoBehaviour {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
 
-        if (Input.GetKeyDown(KeyCode.C))
+        /*if (Input.GetKeyDown(KeyCode.C))
         {
             if (cam1.enabled == true)
             {
@@ -43,6 +43,32 @@ public class GameController : MonoBehaviour {
                 cam1.enabled = true;
             }
             
+        }*/
+
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            SceneManager.LoadScene(0);
         }
-	}
+
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            SceneManager.LoadScene(1);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            SceneManager.LoadScene(2);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            SceneManager.LoadScene(3);
+        }
+
+        /*if (Input.GetKeyDown(KeyCode.Alpha5))
+        {
+            SceneManager.LoadScene(4);
+        }*/
+
+    }
 }
